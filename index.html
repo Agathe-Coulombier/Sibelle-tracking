@@ -5,180 +5,240 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Suivi Sibelle</title>
 <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#4C6B58">
+<meta name="theme-color" content="#24312B">
 <link rel="icon" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
-</head>
-<body>
-<div id="app"></div>
 <style>
   :root {
-    --stone: #E8E3DA;
-    --stone-dark: #DAD3C6;
-    --ink: #2B2A26;
-    --ink-soft: #6B6459;
-    --calm: #4C6B58;      --calm-soft: #DCE6DF;
-    --charge: #C98A2E;    --charge-soft: #F2E4CB;
-    --intim: #B5533C;     --intim-soft: #F2DAD2;
-    --bark: #8C6E4E;      --bark-soft: #EAE0D1;
-    --joy: #3C7A89;       --joy-soft: #D8E6E9;
-    --displace: #8B5E83;  --displace-soft: #E9DEE7;
-    --neutral: #9C948A;   --neutral-soft: #ECE9E3;
-    --white: #FBFAF7;
-    --radius: 16px;
+    --bg: #EAEFEA;
+    --bg-deep: #24312B;
+    --ink: #22291F;
+    --ink-soft: #667064;
+    --card: #FFFFFF;
+    --line: #DCE3DA;
+
+    --calm: #3F7D5C;      --calm-soft: #DCEEE1;
+    --charge: #BE7A2E;    --charge-soft: #F3E4C9;
+    --intim: #AE3E30;     --intim-soft: #F4DAD4;
+    --bark: #6E5A3D;      --bark-soft: #EAE2D0;
+    --joy: #2A7A8C;       --joy-soft: #D7E9EC;
+    --displace: #7A4F73;  --displace-soft: #EADCE7;
+    --neutral: #838C81;   --neutral-soft: #E7EAE4;
+
+    --radius: 18px;
+    --radius-sm: 12px;
   }
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
+  html, body { background: var(--bg); }
+
   #app {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-    background: var(--stone);
+    background: var(--bg);
     color: var(--ink);
     min-height: 100vh;
-    padding: 18px 14px 90px;
+    padding: 0 0 96px;
     max-width: 480px;
     margin: 0 auto;
   }
 
-  .header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px; }
-  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; margin: 0; }
-  .header .date { font-size: 12.5px; color: var(--ink-soft); }
+  .topbar {
+    background: var(--bg-deep);
+    color: #F2F0E9;
+    padding: 20px 18px 22px;
+    border-radius: 0 0 22px 22px;
+  }
+  .topbar-row { display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-mark {
+    width: 34px; height: 34px; border-radius: 10px; background: rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .brand-mark svg { width: 18px; height: 18px; }
+  .brand h1 { font-size: 18px; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
+  .topbar .date { font-size: 12px; color: rgba(242,240,233,0.65); font-weight: 500; }
+
+  .content { padding: 18px 16px 4px; }
 
   .section-label {
-    font-size: 12px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.06em; color: var(--ink-soft); margin: 20px 0 8px 2px;
+    font-size: 11.5px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--ink-soft); margin: 26px 0 10px 2px;
   }
+  .content > .section-label:first-child { margin-top: 4px; }
 
-  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  /* Location chips */
+  .chips { display: flex; gap: 7px; flex-wrap: wrap; }
   .chip {
-    padding: 9px 14px; border-radius: 999px; background: var(--white);
-    border: 1.5px solid var(--stone-dark); font-size: 13.5px; font-weight: 500;
+    padding: 8px 15px; border-radius: 999px; background: var(--card);
+    border: 1.5px solid var(--line); font-size: 13.5px; font-weight: 600;
     color: var(--ink); cursor: pointer; transition: all 0.15s ease;
   }
-  .chip.selected { background: var(--ink); color: var(--white); border-color: var(--ink); }
-  .chip.add-chip { border-style: dashed; color: var(--ink-soft); background: transparent; }
+  .chip.selected { background: var(--calm); color: #fff; border-color: var(--calm); }
+  .chip.add-chip {
+    border-style: dashed; color: var(--ink-soft); background: transparent;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .chip.add-chip svg { width: 12px; height: 12px; }
 
-  .add-context-row { display: flex; gap: 6px; margin-top: 8px; }
+  .add-context-row { display: flex; gap: 6px; margin-top: 9px; }
   .add-context-row input {
-    flex: 1; border: 1.5px solid var(--stone-dark); border-radius: 10px; padding: 9px 12px;
-    font-size: 13.5px; background: var(--white); color: var(--ink); font-family: inherit;
+    flex: 1; border: 1.5px solid var(--line); border-radius: var(--radius-sm); padding: 9px 13px;
+    font-size: 13.5px; background: var(--card); color: var(--ink); font-family: inherit;
   }
-  .add-context-row input:focus { outline: none; border-color: var(--ink); }
+  .add-context-row input:focus { outline: none; border-color: var(--calm); }
   .add-context-row button {
-    border: none; border-radius: 10px; padding: 9px 12px; font-size: 13.5px; font-weight: 600; cursor: pointer;
+    border: none; border-radius: var(--radius-sm); padding: 9px 14px; font-size: 13.5px; font-weight: 700; cursor: pointer;
   }
-  .add-context-row .add-confirm { background: var(--ink); color: var(--white); }
-  .add-context-row .add-cancel { background: var(--stone); color: var(--ink-soft); }
+  .add-context-row .add-confirm { background: var(--calm); color: #fff; }
+  .add-context-row .add-cancel { background: var(--neutral-soft); color: var(--ink-soft); }
 
+  /* Reaction cards */
   .reactions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .react-btn {
-    border: none; border-radius: var(--radius); padding: 15px 10px; text-align: left;
-    cursor: pointer; transition: transform 0.08s ease; display: flex; flex-direction: column; gap: 2px;
+    border: none; border-radius: var(--radius-sm); padding: 13px 12px; text-align: left;
+    cursor: pointer; transition: transform 0.08s ease; display: flex; flex-direction: column; gap: 8px;
+    background: var(--card); border-left: 4px solid var(--rc); box-shadow: 0 1px 3px rgba(34,41,31,0.06);
   }
-  .react-btn:active { transform: scale(0.96); }
-  .react-btn .emoji { font-size: 19px; }
-  .react-btn .label { font-size: 13.8px; font-weight: 700; }
-  .react-btn .sub { font-size: 11px; opacity: 0.75; font-weight: 500; }
-  .react-btn.full {
-    grid-column: span 2; flex-direction: row; align-items: center; gap: 8px;
+  .react-btn:active { transform: scale(0.97); }
+  .icon-badge {
+    width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    background: var(--bs); color: var(--rc); flex-shrink: 0;
   }
+  .icon-badge svg { width: 18px; height: 18px; }
+  .react-btn .label { font-size: 13.6px; font-weight: 700; color: var(--ink); line-height: 1.2; }
+  .react-btn .sub { font-size: 10.8px; color: var(--ink-soft); font-weight: 500; margin-top: 1px; }
 
+  /* Sparkline week strip (signature element) */
+  .spark-card {
+    background: var(--card); border-radius: var(--radius); padding: 16px 14px 10px;
+    box-shadow: 0 1px 3px rgba(34,41,31,0.06);
+  }
+  .spark-svg-wrap { position: relative; }
+  .spark-days { display: flex; justify-content: space-between; margin-top: 6px; padding: 0 2px; }
+  .spark-day-label { font-size: 10px; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; width: 14.28%; text-align: center; }
+  .spark-day-label.today { color: var(--ink); }
+
+  /* Stats */
+  .stats { display: flex; gap: 8px; flex-wrap: wrap; }
+  .stat-card {
+    flex: 1; min-width: 70px; border-radius: var(--radius-sm); padding: 12px 8px; text-align: center;
+    background: var(--bs); border: 1px solid var(--line);
+  }
+  .stat-card .n { font-size: 21px; font-weight: 800; color: var(--rc); font-variant-numeric: tabular-nums; }
+  .stat-card .l { font-size: 9.5px; color: var(--ink-soft); font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; margin-top: 3px; }
+  .stat-card .trend { font-size: 10px; font-weight: 700; margin-top: 4px; }
+  .trend.up { color: var(--intim); }
+  .trend.down { color: var(--calm); }
+  .trend.flat { color: var(--ink-soft); }
+
+  /* History */
+  .history { background: var(--card); border-radius: var(--radius); overflow: hidden; box-shadow: 0 1px 3px rgba(34,41,31,0.06); }
+  .h-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--bg); font-size: 13px; gap: 8px; }
+  .h-item:last-child { border-bottom: none; }
+  .h-left { display: flex; align-items: center; gap: 9px; min-width: 0; }
+  .h-icon { width: 26px; height: 26px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--bs); color: var(--rc); }
+  .h-icon svg { width: 13px; height: 13px; }
+  .h-meta { color: var(--ink-soft); font-size: 11.5px; white-space: nowrap; }
+  .h-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+  .h-del { background: none; border: none; color: var(--ink-soft); font-size: 13px; cursor: pointer; padding: 4px 6px; flex-shrink:0; }
+  .empty { text-align: center; padding: 26px 10px; color: var(--ink-soft); font-size: 13.5px; }
+  .toggle-more { text-align: center; padding: 11px; font-size: 12.5px; font-weight: 700; color: var(--calm); cursor: pointer; border-top: 1px solid var(--bg); }
+
+  /* Bottom nav */
+  .navbar {
+    position: fixed; bottom: 0; left: 0; right: 0; background: var(--card);
+    box-shadow: 0 -2px 10px rgba(34,41,31,0.08); display: flex; justify-content: center;
+    padding: 8px 0 max(8px, env(safe-area-inset-bottom)); z-index: 40;
+    border-radius: 20px 20px 0 0;
+  }
+  .navbar-inner { display: flex; width: 100%; max-width: 480px; padding: 0 8px; }
+  .nav-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    background: none; border: none; padding: 6px 4px; cursor: pointer; color: var(--ink-soft);
+    font-size: 10.5px; font-weight: 700;
+  }
+  .nav-btn .nav-ic {
+    width: 30px; height: 22px; display: flex; align-items: center; justify-content: center;
+    border-radius: 999px; transition: all 0.15s ease;
+  }
+  .nav-btn .nav-ic svg { width: 19px; height: 19px; }
+  .nav-btn.active { color: var(--ink); }
+  .nav-btn.active .nav-ic { background: var(--calm-soft); color: var(--calm); }
+
+  /* Toast */
   .toast {
-    position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%) translateY(10px);
-    background: var(--ink); color: var(--white); padding: 10px 18px; border-radius: 999px;
+    position: fixed; bottom: 92px; left: 50%; transform: translateX(-50%) translateY(10px);
+    background: var(--bg-deep); color: #fff; padding: 10px 18px; border-radius: 999px;
     font-size: 13.5px; font-weight: 600; opacity: 0; pointer-events: none;
     transition: all 0.25s ease; white-space: nowrap; z-index: 50;
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  .week { display: flex; gap: 6px; justify-content: space-between; }
-  .day { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-  .day .dot {
-    width: 100%; aspect-ratio: 1; border-radius: 10px; background: var(--white);
-    border: 1.5px solid var(--stone-dark); display: flex; align-items: center;
-    justify-content: center; font-size: 12px; font-weight: 700; color: var(--ink-soft);
-  }
-  .day .dlabel { font-size: 10px; color: var(--ink-soft); font-weight: 600; text-transform: uppercase; }
-
-  .stats { display: flex; gap: 8px; flex-wrap: wrap; }
-  .stat-card { flex: 1; min-width: 70px; background: var(--white); border-radius: var(--radius); padding: 11px 8px; text-align: center; }
-  .stat-card .n { font-size: 20px; font-weight: 800; }
-  .stat-card .l { font-size: 10px; color: var(--ink-soft); font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; margin-top: 2px; }
-  .stat-card .trend { font-size: 10.5px; font-weight: 700; margin-top: 3px; }
-  .trend.up { color: var(--intim); }
-  .trend.down { color: var(--calm); }
-  .trend.flat { color: var(--ink-soft); }
-
-  .history { background: var(--white); border-radius: var(--radius); overflow: hidden; }
-  .h-item { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; border-bottom: 1px solid var(--stone); font-size: 13px; gap: 8px; }
-  .h-item:last-child { border-bottom: none; }
-  .h-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
-  .h-tag { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .h-meta { color: var(--ink-soft); font-size: 11.5px; white-space: nowrap; }
-  .h-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .h-del { background: none; border: none; color: var(--ink-soft); font-size: 13px; cursor: pointer; padding: 4px 6px; flex-shrink:0; }
-  .empty { text-align: center; padding: 24px 10px; color: var(--ink-soft); font-size: 13.5px; }
-  .toggle-more { text-align: center; padding: 10px; font-size: 13px; font-weight: 600; color: var(--ink-soft); cursor: pointer; border-top: 1px solid var(--stone); }
-
-  /* Bottom nav */
-  .navbar {
-    position: fixed; bottom: 0; left: 0; right: 0; background: var(--white);
-    border-top: 1px solid var(--stone-dark); display: flex; justify-content: center;
-    padding: 6px 0 max(6px, env(safe-area-inset-bottom)); z-index: 40;
-  }
-  .navbar-inner { display: flex; width: 100%; max-width: 480px; }
-  .nav-btn {
-    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
-    background: none; border: none; padding: 6px 4px; cursor: pointer; color: var(--ink-soft);
-    font-size: 10.5px; font-weight: 600;
-  }
-  .nav-btn .ic { font-size: 19px; }
-  .nav-btn.active { color: var(--ink); }
-
   /* Graph page */
   .filter-row { display: flex; gap: 6px; }
   .filter-row .chip { flex: 1; text-align: center; }
 
-  .chart-card { background: var(--white); border-radius: var(--radius); padding: 14px; }
-  .chart-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
-  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; font-size: 12px; }
-  .bar-label { width: 100px; flex-shrink: 0; color: var(--ink-soft); font-weight: 600; text-align: right; }
-  .bar-track { flex: 1; background: var(--stone); border-radius: 6px; height: 16px; overflow: hidden; }
+  .chart-card { background: var(--card); border-radius: var(--radius); padding: 15px; box-shadow: 0 1px 3px rgba(34,41,31,0.06); }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 12px; }
+  .bar-label { width: 108px; flex-shrink: 0; color: var(--ink-soft); font-weight: 600; text-align: right; font-size: 11.5px; }
+  .bar-track { flex: 1; background: var(--bg); border-radius: 6px; height: 15px; overflow: hidden; }
   .bar-fill { height: 100%; border-radius: 6px; transition: width 0.3s ease; }
   .bar-count { width: 22px; text-align: left; font-weight: 700; font-size: 12px; }
 
-  .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; margin-bottom: 6px; }
-  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--ink-soft); font-weight: 600; }
+  .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 2px; margin-bottom: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10.5px; color: var(--ink-soft); font-weight: 700; }
   .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
 
   svg text { font-family: inherit; }
 </style>
+</head>
+<body>
+<div id="app"></div>
 
 <script>
 (function() {
+  // --- Minimal custom icon set (consistent line/fill style, no emoji) ---
+  const ICONS = {
+    paw: '<svg viewBox="0 0 24 24" fill="currentColor"><ellipse cx="12" cy="16.2" rx="5.4" ry="4.4"/><ellipse cx="4.8" cy="10.4" rx="2.2" ry="2.8" transform="rotate(-18 4.8 10.4)"/><ellipse cx="9.6" cy="6.6" rx="2.2" ry="2.9" transform="rotate(-6 9.6 6.6)"/><ellipse cx="14.4" cy="6.6" rx="2.2" ry="2.9" transform="rotate(6 14.4 6.6)"/><ellipse cx="19.2" cy="10.4" rx="2.2" ry="2.8" transform="rotate(18 19.2 10.4)"/></svg>',
+    sound: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4h3.5L13 18V6L7.5 10H4z"/><path d="M17 9a4 4 0 010 6"/><path d="M19.5 6.5a8 8 0 010 11"/></svg>',
+    bolt: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>',
+    warning: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 21 19H3L12 3.5z"/><path d="M12 10v4"/><circle cx="12" cy="16.6" r="0.9" fill="currentColor" stroke="none"/></svg>',
+    swap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13"/><path d="M14 5l3.5 4L14 13"/><path d="M20 15H7"/><path d="M10 19l-3.5-4L10 11"/></svg>',
+    wind: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h13a2.5 2.5 0 100-5"/><path d="M3 14h16a2.5 2.5 0 110 5"/><path d="M3 19h9"/></svg>',
+    zigzag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l4 4-4 4M9 8l4 4-4 4M15 8l4 4-4 4"/></svg>',
+    ball: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="8.5"/><path d="M5 7c3 2 3 8 0 10" stroke-linecap="round"/><path d="M19 7c-3 2-3 8 0 10" stroke-linecap="round"/></svg>',
+    person: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7" r="3.4"/><path d="M5 21c0-4.4 3.1-7 7-7s7 2.6 7 7"/></svg>',
+    dog: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5 3 3l1 5.5c-1 1.3-1.5 3-1.5 4.5 0 4.4 4 7 9.5 7s9.5-2.6 9.5-7c0-1.5-.5-3.2-1.5-4.5L21 3l-3 2c-1.7-.8-3.7-1.2-6-1.2s-4.3.4-6 1.2z"/><circle cx="9" cy="12.5" r="1.1" fill="#fff"/><circle cx="15" cy="12.5" r="1.1" fill="#fff"/></svg>',
+    chart: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="13" width="4" height="7" rx="1"/><rect x="10" y="8" width="4" height="12" rx="1"/><rect x="16" y="4" width="4" height="16" rx="1"/></svg>',
+    plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  };
+  function icon(id) { return ICONS[id] || ''; }
+
   const CONTEXTS = ['Rue', 'Terrasse', 'Train', 'Appart'];
 
   const REACTION_SETS = {
     humain: [
-      { id:'neutre', label:'Neutre', sub:'aucune réaction', emoji:'✓', colorVar:'neutral', severity:0, full:true },
-      { id:'bond', label:'Bond / grogne', sub:'espace large', emoji:'🐾', colorVar:'calm', severity:1 },
-      { id:'aboiement', label:'Aboiement seul', sub:'sans charge', emoji:'📢', colorVar:'bark', severity:2 },
-      { id:'charge', label:'Charge + aboie', sub:'espace restreint', emoji:'⚡', colorVar:'charge', severity:3 },
-      { id:'intimidation', label:'Intimidation', sub:'à surveiller', emoji:'⚠️', colorVar:'intim', severity:4 },
+      { id:'neutre', label:'Neutre', sub:'aucune réaction', icon:'paw', colorVar:'neutral', severity:0 },
+      { id:'bond', label:'Bond / grogne', sub:'espace large', icon:'paw', colorVar:'calm', severity:1 },
+      { id:'aboiement', label:'Aboiement seul', sub:'sans charge', icon:'sound', colorVar:'bark', severity:2 },
+      { id:'charge', label:'Charge + aboie', sub:'espace restreint', icon:'bolt', colorVar:'charge', severity:3 },
+      { id:'intimidation', label:'Intimidation', sub:'à surveiller', icon:'warning', colorVar:'intim', severity:4 },
     ],
     chien: [
-      { id:'neutre', label:'Neutre', sub:'ignore le chien', emoji:'✓', colorVar:'neutral', severity:0 },
-      { id:'jeu_timide', label:'Jeu timide', sub:'prudent, hésitant', emoji:'🐕', colorVar:'calm', severity:1 },
-      { id:'jeu_franc', label:'Jeu franc', sub:'engagé, détendu', emoji:'🎾', colorVar:'joy', severity:1 },
-      { id:'approche_fuite', label:'Avance puis recule', sub:'peur, hésitation', emoji:'↔️', colorVar:'charge', severity:2 },
-      { id:'fuite', label:'Fuit en courant', sub:'évitement net', emoji:'💨', colorVar:'intim', severity:3 },
-      { id:'claque_dents', label:'Claque des dents', sub:'dans le vide', emoji:'😬', colorVar:'displace', severity:3 },
+      { id:'neutre', label:'Neutre', sub:'ignore le chien', icon:'paw', colorVar:'neutral', severity:0 },
+      { id:'jeu_timide', label:'Jeu timide', sub:'prudent, hésitant', icon:'paw', colorVar:'calm', severity:1 },
+      { id:'jeu_franc', label:'Jeu franc', sub:'engagé, détendu', icon:'ball', colorVar:'joy', severity:1 },
+      { id:'approche_fuite', label:'Avance puis recule', sub:'peur, hésitation', icon:'swap', colorVar:'charge', severity:2 },
+      { id:'fuite', label:'Fuit en courant', sub:'évitement net', icon:'wind', colorVar:'intim', severity:3 },
+      { id:'claque_dents', label:'Claque des dents', sub:'dans le vide', icon:'zigzag', colorVar:'displace', severity:3 },
     ]
   };
 
   const PAGE_META = {
-    humain: { title: '🧍 Interactions humains', emoji:'🧍' },
-    chien: { title: '🐕 Interactions chiens', emoji:'🐕' },
+    humain: { title: 'Interactions humains', icon: 'person' },
+    chien: { title: 'Interactions chiens', icon: 'dog' },
+    graph: { title: 'Graphiques', icon: 'chart' },
   };
 
   function reactionMap(type) {
@@ -186,7 +246,7 @@
   }
 
   let entries = [];
-  let currentTab = 'humain'; // 'humain' | 'chien' | 'graph'
+  let currentTab = 'humain';
   let selectedContext = { humain: 'Rue', chien: 'Rue' };
   let historyExpanded = { humain: false, chien: false };
   let graphFilter = { type: 'tous', period: '7j' };
@@ -200,7 +260,6 @@
       const raw = localStorage.getItem('sibelle-entries');
       entries = raw ? JSON.parse(raw) : [];
     } catch (e) { entries = []; }
-    // migrate old entries without a type
     entries.forEach(e => { if (!e.type) e.type = 'humain'; });
     try {
       const rawCtx = localStorage.getItem('sibelle-custom-contexts');
@@ -223,23 +282,14 @@
     const label = rawLabel.trim();
     if (!label) return;
     const exists = CONTEXTS.concat(customContexts).some(c => c.toLowerCase() === label.toLowerCase());
-    if (!exists) {
-      customContexts.push(label);
-      saveContexts();
-    }
+    if (!exists) { customContexts.push(label); saveContexts(); }
     selectedContext[type] = label;
     addingContext[type] = false;
     render();
   }
 
   function logEntry(type, reactionId) {
-    entries.unshift({
-      id: Date.now(),
-      ts: new Date().toISOString(),
-      context: selectedContext[type],
-      type: type,
-      reaction: reactionId,
-    });
+    entries.unshift({ id: Date.now(), ts: new Date().toISOString(), context: selectedContext[type], type, reaction: reactionId });
     save();
     render();
     const r = reactionMap(type)[reactionId];
@@ -272,10 +322,7 @@
     return days.map(d => {
       const dayEntries = entries.filter(e => e.type === type && startOfDay(new Date(e.ts)).getTime() === d.getTime());
       let worst = null, count = 0;
-      dayEntries.forEach(e => {
-        count++;
-        if (!worst || rmap[e.reaction].severity >= rmap[worst].severity) worst = e.reaction;
-      });
+      dayEntries.forEach(e => { count++; if (!worst || rmap[e.reaction].severity >= rmap[worst].severity) worst = e.reaction; });
       return { d, count, worst, isToday: d.getTime() === today.getTime() };
     });
   }
@@ -289,10 +336,7 @@
 
   function countInRange(type, reactionId, offset) {
     const { start, end } = weekRange(offset);
-    return entries.filter(e => {
-      const t = new Date(e.ts);
-      return e.type === type && t >= start && t < end && e.reaction === reactionId;
-    }).length;
+    return entries.filter(e => { const t = new Date(e.ts); return e.type === type && t >= start && t < end && e.reaction === reactionId; }).length;
   }
 
   function trend(curr, prev) {
@@ -302,15 +346,35 @@
     return { cls: 'flat', txt: '= vs sem. dern.' };
   }
 
+  function renderSparkline(type) {
+    const week = buildWeekStrip(type);
+    const rmap = reactionMap(type);
+    const w = 288, h = 64, padX = 10, padY = 12;
+    const maxCount = Math.max(1, ...week.map(d => d.count));
+    const stepX = (w - padX * 2) / 6;
+    const colorFor = (d) => d.worst ? `var(--${rmap[d.worst].colorVar})` : 'var(--neutral)';
+    const pts = week.map((d, i) => {
+      const x = padX + i * stepX;
+      const y = padY + (h - padY * 2) * (1 - (d.count / maxCount));
+      return { x, y, d };
+    });
+    const line = pts.map(p => `${p.x},${p.y}`).join(' ');
+    return `
+      <svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}">
+        <line x1="${padX}" y1="${h-padY}" x2="${w-padX}" y2="${h-padY}" stroke="var(--line)" stroke-width="1"/>
+        <polyline points="${line}" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+        ${pts.map(p => `<circle cx="${p.x}" cy="${p.d.count > 0 ? p.y : h-padY}" r="${p.d.count > 0 ? 5 : 2.5}" fill="${p.d.count > 0 ? colorFor(p.d) : 'var(--line)'}" ${p.d.isToday ? 'stroke="var(--ink)" stroke-width="1.5"' : ''}/>`).join('')}
+        ${pts.filter(p => p.d.count > 0).map(p => `<text x="${p.x}" y="${p.y - 10}" font-size="10" font-weight="700" fill="${colorFor(p.d)}" text-anchor="middle">${p.d.count}</text>`).join('')}
+      </svg>
+    `;
+  }
+
   function renderLoggingPage(type) {
     const rset = REACTION_SETS[type];
     const rmap = reactionMap(type);
     const week = buildWeekStrip(type);
-    const visibleEntries = (historyExpanded[type] ? entries : entries.slice(0, 200))
-      .filter(e => e.type === type).slice(0, historyExpanded[type] ? 200 : 6);
     const allTypeEntries = entries.filter(e => e.type === type);
-
-    // pick up to 3 non-neutral reactions with highest "this week" count for stat cards, else first 3
+    const visibleEntries = allTypeEntries.slice(0, historyExpanded[type] ? 200 : 6);
     const nonNeutral = rset.filter(r => r.id !== 'neutre');
     const statReactions = nonNeutral.slice(0, 3);
 
@@ -318,37 +382,35 @@
       <div class="section-label">Où</div>
       <div class="chips" id="chips-${type}">
         ${CONTEXTS.concat(customContexts).map(c => `<div class="chip ${c === selectedContext[type] ? 'selected' : ''}" data-ctx="${c}">${c}</div>`).join('')}
-        <div class="chip add-chip" data-add="${type}">+ Autre</div>
+        <div class="chip add-chip" data-add="${type}">${icon('plus')} Autre</div>
       </div>
       ${addingContext[type] ? `
         <div class="add-context-row">
           <input type="text" id="addctx-input-${type}" placeholder="Nom du lieu" maxlength="24" />
           <button class="add-confirm" data-confirm-add="${type}">Ajouter</button>
-          <button class="add-cancel" data-cancel-add="${type}">✕</button>
+          <button class="add-cancel" data-cancel-add="${type}">Annuler</button>
         </div>
       ` : ''}
 
       <div class="section-label">Réaction observée</div>
       <div class="reactions" id="reactions-${type}">
         ${rset.filter(r => r.id !== 'neutre').map(r => `
-          <button class="react-btn ${r.full ? 'full' : ''}" style="background:var(--${r.colorVar}-soft); color:var(--${r.colorVar})" data-reaction="${r.id}">
-            <span class="emoji">${r.emoji}</span>
-            <span class="label">${r.label}</span>
-            ${r.sub ? `<span class="sub">${r.sub}</span>` : ''}
+          <button class="react-btn" style="--rc:var(--${r.colorVar}); --bs:var(--${r.colorVar}-soft)" data-reaction="${r.id}">
+            <span class="icon-badge">${icon(r.icon)}</span>
+            <span>
+              <div class="label">${r.label}</div>
+              <div class="sub">${r.sub}</div>
+            </span>
           </button>
         `).join('')}
       </div>
 
       <div class="section-label">7 derniers jours</div>
-      <div class="week">
-        ${week.map(w => `
-          <div class="day">
-            <div class="dot" style="${w.worst ? `background: var(--${rmap[w.worst].colorVar}-soft); border-color: var(--${rmap[w.worst].colorVar});` : ''}">
-              ${w.count > 0 ? w.count : ''}
-            </div>
-            <div class="dlabel" style="${w.isToday ? 'color: var(--ink); font-weight:800;' : ''}">${fmtDay(w.d)}</div>
-          </div>
-        `).join('')}
+      <div class="spark-card">
+        <div class="spark-svg-wrap">${renderSparkline(type)}</div>
+        <div class="spark-days">
+          ${week.map(w => `<div class="spark-day-label ${w.isToday ? 'today' : ''}">${fmtDay(w.d)}</div>`).join('')}
+        </div>
       </div>
 
       <div class="section-label">Tendance (semaine en cours)</div>
@@ -358,8 +420,8 @@
           const prev = countInRange(type, r.id, 1);
           const t = trend(curr, prev);
           return `
-            <div class="stat-card">
-              <div class="n" style="color:var(--${r.colorVar})">${curr}</div>
+            <div class="stat-card" style="--rc:var(--${r.colorVar}); --bs:var(--${r.colorVar}-soft)">
+              <div class="n">${curr}</div>
               <div class="l">${r.label}</div>
               <div class="trend ${t.cls}">${t.txt}</div>
             </div>
@@ -377,7 +439,7 @@
           return `
             <div class="h-item">
               <div class="h-left">
-                <span class="h-tag" style="background:var(--${r.colorVar})"></span>
+                <span class="h-icon" style="--rc:var(--${r.colorVar}); --bs:var(--${r.colorVar}-soft)">${icon(r.icon)}</span>
                 <span class="h-label">${r.label} · ${e.context}</span>
               </div>
               <div class="h-left">
@@ -407,7 +469,6 @@
     const list = filteredEntriesForGraph();
     const typesToShow = graphFilter.type === 'tous' ? ['humain', 'chien'] : [graphFilter.type];
 
-    // Bar chart: counts per reaction, across relevant type(s)
     let barRows = [];
     typesToShow.forEach(t => {
       REACTION_SETS[t].forEach(r => {
@@ -418,7 +479,6 @@
     const maxCount = Math.max(1, ...barRows.map(b => b.count));
     barRows.sort((a,b) => b.count - a.count);
 
-    // Weekly trend: last 6 weeks, per reaction (only non-neutral, for chosen type; if 'tous', combine per-id across both — keep simple: if tous, show human+chien combined lines separately by id with type prefix limited to top 4 by total count)
     const weeksBack = 6;
     const weekLabels = [];
     for (let i = weeksBack - 1; i >= 0; i--) {
@@ -431,14 +491,11 @@
     typesToShow.forEach(t => {
       REACTION_SETS[t].filter(r => r.id !== 'neutre').forEach(r => {
         const counts = [];
-        for (let i = weeksBack - 1; i >= 0; i--) {
-          counts.push(countInRange(t, r.id, i));
-        }
+        for (let i = weeksBack - 1; i >= 0; i--) counts.push(countInRange(t, r.id, i));
         const total = counts.reduce((a,b)=>a+b,0);
-        trendSeries.push({ id: t + '-' + r.id, label: (typesToShow.length > 1 ? (t === 'humain' ? '🧍 ' : '🐕 ') : '') + r.label, colorVar: r.colorVar, counts, total });
+        trendSeries.push({ label: (typesToShow.length > 1 ? (t === 'humain' ? '🧍 ' : '🐕 ') : '') + r.label, colorVar: r.colorVar, counts, total });
       });
     });
-    // keep top 5 series by total to avoid a spaghetti chart
     trendSeries.sort((a,b) => b.total - a.total);
     trendSeries = trendSeries.filter(s => s.total > 0).slice(0, 5);
 
@@ -481,7 +538,7 @@
             ${trendSeries.map(s => `<div class="legend-item"><span class="legend-dot" style="background:var(--${s.colorVar})"></span>${s.label}</div>`).join('')}
           </div>
           <svg viewBox="0 0 ${chartW} ${chartH}" width="100%" height="${chartH}">
-            <line x1="${padL}" y1="${chartH-padB}" x2="${chartW}" y2="${chartH-padB}" stroke="var(--stone-dark)" stroke-width="1"/>
+            <line x1="${padL}" y1="${chartH-padB}" x2="${chartW}" y2="${chartH-padB}" stroke="var(--line)" stroke-width="1"/>
             ${trendSeries.map(s => `<polyline points="${pointsFor(s.counts)}" fill="none" stroke="var(--${s.colorVar})" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>`).join('')}
             ${trendSeries.map(s => s.counts.map((c,i) => {
               const x = padL + i * stepX;
@@ -496,23 +553,27 @@
   }
 
   function render() {
-    let body;
-    let title;
-    if (currentTab === 'humain') { body = renderLoggingPage('humain'); title = PAGE_META.humain.title; }
-    else if (currentTab === 'chien') { body = renderLoggingPage('chien'); title = PAGE_META.chien.title; }
-    else { body = renderGraphPage(); title = '📊 Graphiques'; }
+    let body, meta;
+    if (currentTab === 'humain') { body = renderLoggingPage('humain'); meta = PAGE_META.humain; }
+    else if (currentTab === 'chien') { body = renderLoggingPage('chien'); meta = PAGE_META.chien; }
+    else { body = renderGraphPage(); meta = PAGE_META.graph; }
 
     app.innerHTML = `
-      <div class="header">
-        <h1>${title}</h1>
-        <div class="date">${new Date().toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}</div>
+      <div class="topbar">
+        <div class="topbar-row">
+          <div class="brand">
+            <span class="brand-mark">${icon(meta.icon)}</span>
+            <h1>${meta.title}</h1>
+          </div>
+          <div class="date">${new Date().toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}</div>
+        </div>
       </div>
-      ${body}
+      <div class="content">${body}</div>
       <div class="navbar">
         <div class="navbar-inner">
-          <button class="nav-btn ${currentTab==='humain'?'active':''}" data-tab="humain"><span class="ic">🧍</span>Humains</button>
-          <button class="nav-btn ${currentTab==='chien'?'active':''}" data-tab="chien"><span class="ic">🐕</span>Chiens</button>
-          <button class="nav-btn ${currentTab==='graph'?'active':''}" data-tab="graph"><span class="ic">📊</span>Graphiques</button>
+          <button class="nav-btn ${currentTab==='humain'?'active':''}" data-tab="humain"><span class="nav-ic">${icon('person')}</span>Humains</button>
+          <button class="nav-btn ${currentTab==='chien'?'active':''}" data-tab="chien"><span class="nav-ic">${icon('dog')}</span>Chiens</button>
+          <button class="nav-btn ${currentTab==='graph'?'active':''}" data-tab="graph"><span class="nav-ic">${icon('chart')}</span>Graphiques</button>
         </div>
       </div>
     `;
@@ -528,8 +589,7 @@
       });
       const addChip = document.querySelector(`#chips-${type} .add-chip`);
       if (addChip) addChip.addEventListener('click', () => {
-        addingContext[type] = true;
-        render();
+        addingContext[type] = true; render();
         const input = document.getElementById(`addctx-input-${type}`);
         if (input) input.focus();
       });
@@ -541,9 +601,7 @@
       const cancelBtn = document.querySelector(`[data-cancel-add="${type}"]`);
       if (cancelBtn) cancelBtn.addEventListener('click', () => { addingContext[type] = false; render(); });
       const addInput = document.getElementById(`addctx-input-${type}`);
-      if (addInput) addInput.addEventListener('keydown', (ev) => {
-        if (ev.key === 'Enter') addCustomContext(type, addInput.value);
-      });
+      if (addInput) addInput.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') addCustomContext(type, addInput.value); });
       document.querySelectorAll(`#reactions-${type} .react-btn`).forEach(el => {
         el.addEventListener('click', () => { logEntry(type, el.dataset.reaction); });
       });
@@ -567,12 +625,11 @@
   load();
 })();
 </script>
+
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js').catch(err => {
-      console.error('Erreur service worker', err);
-    });
+    navigator.serviceWorker.register('./service-worker.js').catch(err => console.error('Erreur service worker', err));
   });
 }
 </script>
