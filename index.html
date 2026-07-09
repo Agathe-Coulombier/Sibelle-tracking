@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Suivi Sibelle</title>
+</head>
+<body>
+<div id="app"></div>
+<style>
+  :root {
+    --stone: #E8E3DA;
+    --stone-dark: #DAD3C6;
+    --ink: #2B2A26;
+    --ink-soft: #6B6459;
+    --calm: #4C6B58;      --calm-soft: #DCE6DF;
+    --charge: #C98A2E;    --charge-soft: #F2E4CB;
+    --intim: #B5533C;     --intim-soft: #F2DAD2;
+    --bark: #8C6E4E;      --bark-soft: #EAE0D1;
+    --joy: #3C7A89;       --joy-soft: #D8E6E9;
+    --displace: #8B5E83;  --displace-soft: #E9DEE7;
+    --neutral: #9C948A;   --neutral-soft: #ECE9E3;
+    --white: #FBFAF7;
+    --radius: 16px;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  #app {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: var(--stone);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 18px 14px 90px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px; }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; margin: 0; }
+  .header .date { font-size: 12.5px; color: var(--ink-soft); }
+
+  .section-label {
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--ink-soft); margin: 20px 0 8px 2px;
+  }
+
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    padding: 9px 14px; border-radius: 999px; background: var(--white);
+    border: 1.5px solid var(--stone-dark); font-size: 13.5px; font-weight: 500;
+    color: var(--ink); cursor: pointer; transition: all 0.15s ease;
+  }
+  .chip.selected { background: var(--ink); color: var(--white); border-color: var(--ink); }
+  .chip.add-chip { border-style: dashed; color: var(--ink-soft); background: transparent; }
+
+  .add-context-row { display: flex; gap: 6px; margin-top: 8px; }
+  .add-context-row input {
+    flex: 1; border: 1.5px solid var(--stone-dark); border-radius: 10px; padding: 9px 12px;
+    font-size: 13.5px; background: var(--white); color: var(--ink); font-family: inherit;
+  }
+  .add-context-row input:focus { outline: none; border-color: var(--ink); }
+  .add-context-row button {
+    border: none; border-radius: 10px; padding: 9px 12px; font-size: 13.5px; font-weight: 600; cursor: pointer;
+  }
+  .add-context-row .add-confirm { background: var(--ink); color: var(--white); }
+  .add-context-row .add-cancel { background: var(--stone); color: var(--ink-soft); }
+
+  .reactions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .react-btn {
+    border: none; border-radius: var(--radius); padding: 15px 10px; text-align: left;
+    cursor: pointer; transition: transform 0.08s ease; display: flex; flex-direction: column; gap: 2px;
+  }
+  .react-btn:active { transform: scale(0.96); }
+  .react-btn .emoji { font-size: 19px; }
+  .react-btn .label { font-size: 13.8px; font-weight: 700; }
+  .react-btn .sub { font-size: 11px; opacity: 0.75; font-weight: 500; }
+  .react-btn.full {
+    grid-column: span 2; flex-direction: row; align-items: center; gap: 8px;
+  }
+
+  .toast {
+    position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%) translateY(10px);
+    background: var(--ink); color: var(--white); padding: 10px 18px; border-radius: 999px;
+    font-size: 13.5px; font-weight: 600; opacity: 0; pointer-events: none;
+    transition: all 0.25s ease; white-space: nowrap; z-index: 50;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .week { display: flex; gap: 6px; justify-content: space-between; }
+  .day { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .day .dot {
+    width: 100%; aspect-ratio: 1; border-radius: 10px; background: var(--white);
+    border: 1.5px solid var(--stone-dark); display: flex; align-items: center;
+    justify-content: center; font-size: 12px; font-weight: 700; color: var(--ink-soft);
+  }
+  .day .dlabel { font-size: 10px; color: var(--ink-soft); font-weight: 600; text-transform: uppercase; }
+
+  .stats { display: flex; gap: 8px; flex-wrap: wrap; }
+  .stat-card { flex: 1; min-width: 70px; background: var(--white); border-radius: var(--radius); padding: 11px 8px; text-align: center; }
+  .stat-card .n { font-size: 20px; font-weight: 800; }
+  .stat-card .l { font-size: 10px; color: var(--ink-soft); font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; margin-top: 2px; }
+  .stat-card .trend { font-size: 10.5px; font-weight: 700; margin-top: 3px; }
+  .trend.up { color: var(--intim); }
+  .trend.down { color: var(--calm); }
+  .trend.flat { color: var(--ink-soft); }
+
+  .history { background: var(--white); border-radius: var(--radius); overflow: hidden; }
+  .h-item { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; border-bottom: 1px solid var(--stone); font-size: 13px; gap: 8px; }
+  .h-item:last-child { border-bottom: none; }
+  .h-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .h-tag { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .h-meta { color: var(--ink-soft); font-size: 11.5px; white-space: nowrap; }
+  .h-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .h-del { background: none; border: none; color: var(--ink-soft); font-size: 13px; cursor: pointer; padding: 4px 6px; flex-shrink:0; }
+  .empty { text-align: center; padding: 24px 10px; color: var(--ink-soft); font-size: 13.5px; }
+  .toggle-more { text-align: center; padding: 10px; font-size: 13px; font-weight: 600; color: var(--ink-soft); cursor: pointer; border-top: 1px solid var(--stone); }
+
+  /* Bottom nav */
+  .navbar {
+    position: fixed; bottom: 0; left: 0; right: 0; background: var(--white);
+    border-top: 1px solid var(--stone-dark); display: flex; justify-content: center;
+    padding: 6px 0 max(6px, env(safe-area-inset-bottom)); z-index: 40;
+  }
+  .navbar-inner { display: flex; width: 100%; max-width: 480px; }
+  .nav-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+    background: none; border: none; padding: 6px 4px; cursor: pointer; color: var(--ink-soft);
+    font-size: 10.5px; font-weight: 600;
+  }
+  .nav-btn .ic { font-size: 19px; }
+  .nav-btn.active { color: var(--ink); }
+
+  /* Graph page */
+  .filter-row { display: flex; gap: 6px; }
+  .filter-row .chip { flex: 1; text-align: center; }
+
+  .chart-card { background: var(--white); border-radius: var(--radius); padding: 14px; }
+  .chart-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; font-size: 12px; }
+  .bar-label { width: 100px; flex-shrink: 0; color: var(--ink-soft); font-weight: 600; text-align: right; }
+  .bar-track { flex: 1; background: var(--stone); border-radius: 6px; height: 16px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 6px; transition: width 0.3s ease; }
+  .bar-count { width: 22px; text-align: left; font-weight: 700; font-size: 12px; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; margin-bottom: 6px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--ink-soft); font-weight: 600; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  svg text { font-family: inherit; }
+</style>
+
+<script>
+(function() {
+  const CONTEXTS = ['Rue', 'Terrasse', 'Train', 'Appart'];
+
+  const REACTION_SETS = {
+    humain: [
+      { id:'neutre', label:'Neutre', sub:'aucune réaction', emoji:'✓', colorVar:'neutral', severity:0, full:true },
+      { id:'bond', label:'Bond / grogne', sub:'espace large', emoji:'🐾', colorVar:'calm', severity:1 },
+      { id:'aboiement', label:'Aboiement seul', sub:'sans charge', emoji:'📢', colorVar:'bark', severity:2 },
+      { id:'charge', label:'Charge + aboie', sub:'espace restreint', emoji:'⚡', colorVar:'charge', severity:3 },
+      { id:'intimidation', label:'Intimidation', sub:'à surveiller', emoji:'⚠️', colorVar:'intim', severity:4 },
+    ],
+    chien: [
+      { id:'neutre', label:'Neutre', sub:'ignore le chien', emoji:'✓', colorVar:'neutral', severity:0 },
+      { id:'jeu_timide', label:'Jeu timide', sub:'prudent, hésitant', emoji:'🐕', colorVar:'calm', severity:1 },
+      { id:'jeu_franc', label:'Jeu franc', sub:'engagé, détendu', emoji:'🎾', colorVar:'joy', severity:1 },
+      { id:'approche_fuite', label:'Avance puis recule', sub:'peur, hésitation', emoji:'↔️', colorVar:'charge', severity:2 },
+      { id:'fuite', label:'Fuit en courant', sub:'évitement net', emoji:'💨', colorVar:'intim', severity:3 },
+      { id:'claque_dents', label:'Claque des dents', sub:'dans le vide', emoji:'😬', colorVar:'displace', severity:3 },
+    ]
+  };
+
+  const PAGE_META = {
+    humain: { title: '🧍 Interactions humains', emoji:'🧍' },
+    chien: { title: '🐕 Interactions chiens', emoji:'🐕' },
+  };
+
+  function reactionMap(type) {
+    return Object.fromEntries(REACTION_SETS[type].map(r => [r.id, r]));
+  }
+
+  let entries = [];
+  let currentTab = 'humain'; // 'humain' | 'chien' | 'graph'
+  let selectedContext = { humain: 'Rue', chien: 'Rue' };
+  let historyExpanded = { humain: false, chien: false };
+  let graphFilter = { type: 'tous', period: '7j' };
+  let customContexts = [];
+  let addingContext = { humain: false, chien: false };
+
+  const app = document.getElementById('app');
+
+  async function load() {
+    try {
+      const raw = localStorage.getItem('sibelle-entries');
+      entries = raw ? JSON.parse(raw) : [];
+    } catch (e) { entries = []; }
+    // migrate old entries without a type
+    entries.forEach(e => { if (!e.type) e.type = 'humain'; });
+    try {
+      const rawCtx = localStorage.getItem('sibelle-custom-contexts');
+      customContexts = rawCtx ? JSON.parse(rawCtx) : [];
+    } catch (e) { customContexts = []; }
+    render();
+  }
+
+  async function save() {
+    try { localStorage.setItem('sibelle-entries', JSON.stringify(entries)); }
+    catch (e) { console.error('Erreur de sauvegarde', e); }
+  }
+
+  async function saveContexts() {
+    try { localStorage.setItem('sibelle-custom-contexts', JSON.stringify(customContexts)); }
+    catch (e) { console.error('Erreur de sauvegarde des lieux', e); }
+  }
+
+  function addCustomContext(type, rawLabel) {
+    const label = rawLabel.trim();
+    if (!label) return;
+    const exists = CONTEXTS.concat(customContexts).some(c => c.toLowerCase() === label.toLowerCase());
+    if (!exists) {
+      customContexts.push(label);
+      saveContexts();
+    }
+    selectedContext[type] = label;
+    addingContext[type] = false;
+    render();
+  }
+
+  function logEntry(type, reactionId) {
+    entries.unshift({
+      id: Date.now(),
+      ts: new Date().toISOString(),
+      context: selectedContext[type],
+      type: type,
+      reaction: reactionId,
+    });
+    save();
+    render();
+    const r = reactionMap(type)[reactionId];
+    showToast(r.label + ' · ' + selectedContext[type]);
+  }
+
+  function deleteEntry(id) {
+    entries = entries.filter(e => e.id !== id);
+    save();
+    render();
+  }
+
+  function showToast(msg) {
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = 'Ajouté · ' + msg;
+    document.body.appendChild(t);
+    requestAnimationFrame(() => t.classList.add('show'));
+    setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 1500);
+  }
+
+  function startOfDay(d) { const x = new Date(d); x.setHours(0,0,0,0); return x; }
+  function fmtDay(d) { return d.toLocaleDateString('fr-FR', { weekday: 'short' }).replace('.', '').slice(0,3); }
+
+  function buildWeekStrip(type) {
+    const today = startOfDay(new Date());
+    const days = [];
+    for (let i = 6; i >= 0; i--) { const d = new Date(today); d.setDate(d.getDate() - i); days.push(d); }
+    const rmap = reactionMap(type);
+    return days.map(d => {
+      const dayEntries = entries.filter(e => e.type === type && startOfDay(new Date(e.ts)).getTime() === d.getTime());
+      let worst = null, count = 0;
+      dayEntries.forEach(e => {
+        count++;
+        if (!worst || rmap[e.reaction].severity >= rmap[worst].severity) worst = e.reaction;
+      });
+      return { d, count, worst, isToday: d.getTime() === today.getTime() };
+    });
+  }
+
+  function weekRange(offset) {
+    const today = startOfDay(new Date());
+    const end = new Date(today); end.setDate(end.getDate() - (offset * 7) + 1);
+    const start = new Date(end); start.setDate(start.getDate() - 7);
+    return { start, end };
+  }
+
+  function countInRange(type, reactionId, offset) {
+    const { start, end } = weekRange(offset);
+    return entries.filter(e => {
+      const t = new Date(e.ts);
+      return e.type === type && t >= start && t < end && e.reaction === reactionId;
+    }).length;
+  }
+
+  function trend(curr, prev) {
+    if (prev === 0 && curr === 0) return { cls: 'flat', txt: '—' };
+    if (curr > prev) return { cls: 'up', txt: '↑ vs sem. dern.' };
+    if (curr < prev) return { cls: 'down', txt: '↓ vs sem. dern.' };
+    return { cls: 'flat', txt: '= vs sem. dern.' };
+  }
+
+  function renderLoggingPage(type) {
+    const rset = REACTION_SETS[type];
+    const rmap = reactionMap(type);
+    const week = buildWeekStrip(type);
+    const visibleEntries = (historyExpanded[type] ? entries : entries.slice(0, 200))
+      .filter(e => e.type === type).slice(0, historyExpanded[type] ? 200 : 6);
+    const allTypeEntries = entries.filter(e => e.type === type);
+
+    // pick up to 3 non-neutral reactions with highest "this week" count for stat cards, else first 3
+    const nonNeutral = rset.filter(r => r.id !== 'neutre');
+    const statReactions = nonNeutral.slice(0, 3);
+
+    return `
+      <div class="section-label">Où</div>
+      <div class="chips" id="chips-${type}">
+        ${CONTEXTS.concat(customContexts).map(c => `<div class="chip ${c === selectedContext[type] ? 'selected' : ''}" data-ctx="${c}">${c}</div>`).join('')}
+        <div class="chip add-chip" data-add="${type}">+ Autre</div>
+      </div>
+      ${addingContext[type] ? `
+        <div class="add-context-row">
+          <input type="text" id="addctx-input-${type}" placeholder="Nom du lieu" maxlength="24" />
+          <button class="add-confirm" data-confirm-add="${type}">Ajouter</button>
+          <button class="add-cancel" data-cancel-add="${type}">✕</button>
+        </div>
+      ` : ''}
+
+      <div class="section-label">Réaction observée</div>
+      <div class="reactions" id="reactions-${type}">
+        ${rset.filter(r => r.id !== 'neutre').map(r => `
+          <button class="react-btn ${r.full ? 'full' : ''}" style="background:var(--${r.colorVar}-soft); color:var(--${r.colorVar})" data-reaction="${r.id}">
+            <span class="emoji">${r.emoji}</span>
+            <span class="label">${r.label}</span>
+            ${r.sub ? `<span class="sub">${r.sub}</span>` : ''}
+          </button>
+        `).join('')}
+      </div>
+
+      <div class="section-label">7 derniers jours</div>
+      <div class="week">
+        ${week.map(w => `
+          <div class="day">
+            <div class="dot" style="${w.worst ? `background: var(--${rmap[w.worst].colorVar}-soft); border-color: var(--${rmap[w.worst].colorVar});` : ''}">
+              ${w.count > 0 ? w.count : ''}
+            </div>
+            <div class="dlabel" style="${w.isToday ? 'color: var(--ink); font-weight:800;' : ''}">${fmtDay(w.d)}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="section-label">Tendance (semaine en cours)</div>
+      <div class="stats">
+        ${statReactions.map(r => {
+          const curr = countInRange(type, r.id, 0);
+          const prev = countInRange(type, r.id, 1);
+          const t = trend(curr, prev);
+          return `
+            <div class="stat-card">
+              <div class="n" style="color:var(--${r.colorVar})">${curr}</div>
+              <div class="l">${r.label}</div>
+              <div class="trend ${t.cls}">${t.txt}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+
+      <div class="section-label">Historique</div>
+      <div class="history">
+        ${allTypeEntries.length === 0 ? '<div class="empty">Aucune entrée pour l\'instant.<br>Appuie sur une réaction ci-dessus.</div>' : visibleEntries.map(e => {
+          const r = rmap[e.reaction];
+          const d = new Date(e.ts);
+          const dateStr = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+          const timeStr = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+          return `
+            <div class="h-item">
+              <div class="h-left">
+                <span class="h-tag" style="background:var(--${r.colorVar})"></span>
+                <span class="h-label">${r.label} · ${e.context}</span>
+              </div>
+              <div class="h-left">
+                <span class="h-meta">${dateStr}, ${timeStr}</span>
+                <button class="h-del" data-del="${e.id}">✕</button>
+              </div>
+            </div>
+          `;
+        }).join('')}
+        ${allTypeEntries.length > 6 ? `<div class="toggle-more" data-toggle="${type}">${historyExpanded[type] ? 'Voir moins' : 'Voir tout (' + allTypeEntries.length + ')'}</div>` : ''}
+      </div>
+    `;
+  }
+
+  function filteredEntriesForGraph() {
+    const { type, period } = graphFilter;
+    let list = entries.filter(e => type === 'tous' || e.type === type);
+    if (period !== 'tout') {
+      const weeks = period === '7j' ? 1 : 4;
+      const { start } = weekRange(weeks - 1);
+      list = list.filter(e => new Date(e.ts) >= start);
+    }
+    return list;
+  }
+
+  function renderGraphPage() {
+    const list = filteredEntriesForGraph();
+    const typesToShow = graphFilter.type === 'tous' ? ['humain', 'chien'] : [graphFilter.type];
+
+    // Bar chart: counts per reaction, across relevant type(s)
+    let barRows = [];
+    typesToShow.forEach(t => {
+      REACTION_SETS[t].forEach(r => {
+        const count = list.filter(e => e.type === t && e.reaction === r.id).length;
+        barRows.push({ label: (typesToShow.length > 1 ? (t === 'humain' ? '🧍 ' : '🐕 ') : '') + r.label, count, colorVar: r.colorVar });
+      });
+    });
+    const maxCount = Math.max(1, ...barRows.map(b => b.count));
+    barRows.sort((a,b) => b.count - a.count);
+
+    // Weekly trend: last 6 weeks, per reaction (only non-neutral, for chosen type; if 'tous', combine per-id across both — keep simple: if tous, show human+chien combined lines separately by id with type prefix limited to top 4 by total count)
+    const weeksBack = 6;
+    const weekLabels = [];
+    for (let i = weeksBack - 1; i >= 0; i--) {
+      const { start } = weekRange(i);
+      const wd = new Date(start); wd.setDate(wd.getDate() + 6);
+      weekLabels.push(wd.toLocaleDateString('fr-FR', { day:'numeric', month:'numeric' }));
+    }
+
+    let trendSeries = [];
+    typesToShow.forEach(t => {
+      REACTION_SETS[t].filter(r => r.id !== 'neutre').forEach(r => {
+        const counts = [];
+        for (let i = weeksBack - 1; i >= 0; i--) {
+          counts.push(countInRange(t, r.id, i));
+        }
+        const total = counts.reduce((a,b)=>a+b,0);
+        trendSeries.push({ id: t + '-' + r.id, label: (typesToShow.length > 1 ? (t === 'humain' ? '🧍 ' : '🐕 ') : '') + r.label, colorVar: r.colorVar, counts, total });
+      });
+    });
+    // keep top 5 series by total to avoid a spaghetti chart
+    trendSeries.sort((a,b) => b.total - a.total);
+    trendSeries = trendSeries.filter(s => s.total > 0).slice(0, 5);
+
+    const chartW = 320, chartH = 140, padL = 24, padB = 18, padT = 8;
+    const maxTrend = Math.max(1, ...trendSeries.flatMap(s => s.counts));
+    const stepX = trendSeries.length ? (chartW - padL) / (weeksBack - 1) : 0;
+
+    function pointsFor(counts) {
+      return counts.map((c, i) => {
+        const x = padL + i * stepX;
+        const y = padT + (chartH - padT - padB) * (1 - c / maxTrend);
+        return `${x},${y}`;
+      }).join(' ');
+    }
+
+    return `
+      <div class="section-label">Filtrer</div>
+      <div class="filter-row">
+        ${['tous','humain','chien'].map(t => `<div class="chip ${graphFilter.type===t?'selected':''}" data-gtype="${t}">${t==='tous'?'Tous':t==='humain'?'🧍 Humains':'🐕 Chiens'}</div>`).join('')}
+      </div>
+      <div class="filter-row" style="margin-top:6px">
+        ${[['7j','7 jours'],['4s','4 semaines'],['tout','Tout']].map(([k,l]) => `<div class="chip ${graphFilter.period===k?'selected':''}" data-gperiod="${k}">${l}</div>`).join('')}
+      </div>
+
+      <div class="section-label">Répartition par type de réaction</div>
+      <div class="chart-card">
+        ${list.length === 0 ? '<div class="empty">Pas assez de données pour cette période.</div>' : barRows.map(b => `
+          <div class="bar-row">
+            <div class="bar-label">${b.label}</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${(b.count/maxCount*100)}%; background:var(--${b.colorVar})"></div></div>
+            <div class="bar-count">${b.count}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="section-label">Évolution sur 6 semaines</div>
+      <div class="chart-card">
+        ${trendSeries.length === 0 ? '<div class="empty">Pas assez de données pour un graphique.</div>' : `
+          <div class="legend">
+            ${trendSeries.map(s => `<div class="legend-item"><span class="legend-dot" style="background:var(--${s.colorVar})"></span>${s.label}</div>`).join('')}
+          </div>
+          <svg viewBox="0 0 ${chartW} ${chartH}" width="100%" height="${chartH}">
+            <line x1="${padL}" y1="${chartH-padB}" x2="${chartW}" y2="${chartH-padB}" stroke="var(--stone-dark)" stroke-width="1"/>
+            ${trendSeries.map(s => `<polyline points="${pointsFor(s.counts)}" fill="none" stroke="var(--${s.colorVar})" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>`).join('')}
+            ${trendSeries.map(s => s.counts.map((c,i) => {
+              const x = padL + i * stepX;
+              const y = padT + (chartH - padT - padB) * (1 - c / maxTrend);
+              return `<circle cx="${x}" cy="${y}" r="2.6" fill="var(--${s.colorVar})"/>`;
+            }).join('')).join('')}
+            ${weekLabels.map((l,i) => `<text x="${padL + i*stepX}" y="${chartH-4}" font-size="8" fill="var(--ink-soft)" text-anchor="middle">${l}</text>`).join('')}
+          </svg>
+        `}
+      </div>
+    `;
+  }
+
+  function render() {
+    let body;
+    let title;
+    if (currentTab === 'humain') { body = renderLoggingPage('humain'); title = PAGE_META.humain.title; }
+    else if (currentTab === 'chien') { body = renderLoggingPage('chien'); title = PAGE_META.chien.title; }
+    else { body = renderGraphPage(); title = '📊 Graphiques'; }
+
+    app.innerHTML = `
+      <div class="header">
+        <h1>${title}</h1>
+        <div class="date">${new Date().toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}</div>
+      </div>
+      ${body}
+      <div class="navbar">
+        <div class="navbar-inner">
+          <button class="nav-btn ${currentTab==='humain'?'active':''}" data-tab="humain"><span class="ic">🧍</span>Humains</button>
+          <button class="nav-btn ${currentTab==='chien'?'active':''}" data-tab="chien"><span class="ic">🐕</span>Chiens</button>
+          <button class="nav-btn ${currentTab==='graph'?'active':''}" data-tab="graph"><span class="ic">📊</span>Graphiques</button>
+        </div>
+      </div>
+    `;
+
+    document.querySelectorAll('.nav-btn').forEach(el => {
+      el.addEventListener('click', () => { currentTab = el.dataset.tab; render(); });
+    });
+
+    if (currentTab === 'humain' || currentTab === 'chien') {
+      const type = currentTab;
+      document.querySelectorAll(`#chips-${type} .chip:not(.add-chip)`).forEach(el => {
+        el.addEventListener('click', () => { selectedContext[type] = el.dataset.ctx; render(); });
+      });
+      const addChip = document.querySelector(`#chips-${type} .add-chip`);
+      if (addChip) addChip.addEventListener('click', () => {
+        addingContext[type] = true;
+        render();
+        const input = document.getElementById(`addctx-input-${type}`);
+        if (input) input.focus();
+      });
+      const confirmBtn = document.querySelector(`[data-confirm-add="${type}"]`);
+      if (confirmBtn) confirmBtn.addEventListener('click', () => {
+        const input = document.getElementById(`addctx-input-${type}`);
+        addCustomContext(type, input ? input.value : '');
+      });
+      const cancelBtn = document.querySelector(`[data-cancel-add="${type}"]`);
+      if (cancelBtn) cancelBtn.addEventListener('click', () => { addingContext[type] = false; render(); });
+      const addInput = document.getElementById(`addctx-input-${type}`);
+      if (addInput) addInput.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter') addCustomContext(type, addInput.value);
+      });
+      document.querySelectorAll(`#reactions-${type} .react-btn`).forEach(el => {
+        el.addEventListener('click', () => { logEntry(type, el.dataset.reaction); });
+      });
+      document.querySelectorAll('.h-del').forEach(el => {
+        el.addEventListener('click', (ev) => { ev.stopPropagation(); deleteEntry(Number(el.dataset.del)); });
+      });
+      const toggle = document.querySelector(`[data-toggle="${type}"]`);
+      if (toggle) toggle.addEventListener('click', () => { historyExpanded[type] = !historyExpanded[type]; render(); });
+    }
+
+    if (currentTab === 'graph') {
+      document.querySelectorAll('[data-gtype]').forEach(el => {
+        el.addEventListener('click', () => { graphFilter.type = el.dataset.gtype; render(); });
+      });
+      document.querySelectorAll('[data-gperiod]').forEach(el => {
+        el.addEventListener('click', () => { graphFilter.period = el.dataset.gperiod; render(); });
+      });
+    }
+  }
+
+  load();
+})();
+</script>
+</body>
+</html>
