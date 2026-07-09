@@ -1,4 +1,4 @@
-const CACHE_NAME = 'suivi-sibelle-v2';
+const CACHE_NAME = 'suivi-sibelle-v3';
 const ASSETS = [
   './index.html',
   './manifest.json',

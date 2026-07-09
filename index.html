@@ -10,20 +10,20 @@
 <link rel="apple-touch-icon" href="./icon-192.png">
 <style>
   :root {
-    --bg: #EAEFEA;
-    --bg-deep: #24312B;
-    --ink: #22291F;
-    --ink-soft: #667064;
+    --bg: #F7EFD6;
+    --bg-deep: #23201B;
+    --ink: #23201B;
+    --ink-soft: #7A7060;
     --card: #FFFFFF;
-    --line: #DCE3DA;
+    --line: #EAD9A8;
 
-    --calm: #3F7D5C;      --calm-soft: #DCEEE1;
-    --charge: #BE7A2E;    --charge-soft: #F3E4C9;
-    --intim: #AE3E30;     --intim-soft: #F4DAD4;
-    --bark: #6E5A3D;      --bark-soft: #EAE2D0;
-    --joy: #2A7A8C;       --joy-soft: #D7E9EC;
-    --displace: #7A4F73;  --displace-soft: #EADCE7;
-    --neutral: #838C81;   --neutral-soft: #E7EAE4;
+    --calm: #1F9C7E;      --calm-soft: #D8F0E6;
+    --charge: #F2933F;    --charge-soft: #FCE6C9;
+    --intim: #EA4F72;     --intim-soft: #FBDCE3;
+    --bark: #8C6A3D;      --bark-soft: #F0E6D2;
+    --joy: #3E86D8;       --joy-soft: #DCEBFA;
+    --displace: #9556B0;  --displace-soft: #EEE0F5;
+    --neutral: #93876D;   --neutral-soft: #EFE8D6;
 
     --radius: 18px;
     --radius-sm: 12px;
@@ -96,9 +96,9 @@
   /* Reaction cards */
   .reactions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .react-btn {
-    border: none; border-radius: var(--radius-sm); padding: 13px 12px; text-align: left;
+    border: 1.5px solid var(--line); border-left: 4px solid var(--rc); border-radius: var(--radius-sm); padding: 13px 12px; text-align: left;
     cursor: pointer; transition: transform 0.08s ease; display: flex; flex-direction: column; gap: 8px;
-    background: var(--card); border-left: 4px solid var(--rc); box-shadow: 0 1px 3px rgba(34,41,31,0.06);
+    background: var(--card); box-shadow: 0 1px 3px rgba(35,32,27,0.08);
   }
   .react-btn:active { transform: scale(0.97); }
   .icon-badge {
@@ -112,7 +112,7 @@
   /* Sparkline week strip (signature element) */
   .spark-card {
     background: var(--card); border-radius: var(--radius); padding: 16px 14px 10px;
-    box-shadow: 0 1px 3px rgba(34,41,31,0.06);
+    box-shadow: 0 1px 3px rgba(35,32,27,0.08); border: 1.5px solid var(--line);
   }
   .spark-svg-wrap { position: relative; }
   .spark-days { display: flex; justify-content: space-between; margin-top: 6px; padding: 0 2px; }
@@ -133,7 +133,7 @@
   .trend.flat { color: var(--ink-soft); }
 
   /* History */
-  .history { background: var(--card); border-radius: var(--radius); overflow: hidden; box-shadow: 0 1px 3px rgba(34,41,31,0.06); }
+  .history { background: var(--card); border-radius: var(--radius); overflow: hidden; box-shadow: 0 1px 3px rgba(35,32,27,0.08); border: 1.5px solid var(--line); }
   .h-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--bg); font-size: 13px; gap: 8px; }
   .h-item:last-child { border-bottom: none; }
   .h-left { display: flex; align-items: center; gap: 9px; min-width: 0; }
@@ -179,7 +179,7 @@
   .filter-row { display: flex; gap: 6px; }
   .filter-row .chip { flex: 1; text-align: center; }
 
-  .chart-card { background: var(--card); border-radius: var(--radius); padding: 15px; box-shadow: 0 1px 3px rgba(34,41,31,0.06); }
+  .chart-card { background: var(--card); border-radius: var(--radius); padding: 15px; box-shadow: 0 1px 3px rgba(35,32,27,0.08); border: 1.5px solid var(--line); }
   .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 12px; }
   .bar-label { width: 108px; flex-shrink: 0; color: var(--ink-soft); font-weight: 600; text-align: right; font-size: 11.5px; }
   .bar-track { flex: 1; background: var(--bg); border-radius: 6px; height: 15px; overflow: hidden; }
