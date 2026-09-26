@@ -142,6 +142,27 @@
   .h-meta { color: var(--ink-soft); font-size: 11.5px; white-space: nowrap; }
   .h-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
   .h-del { background: none; border: none; color: var(--ink-soft); font-size: 13px; cursor: pointer; padding: 4px 6px; flex-shrink:0; }
+  .h-note-toggle {
+    background: none; border: none; color: var(--ink-soft); font-size: 11px; font-weight: 700;
+    cursor: pointer; padding: 3px 6px; flex-shrink: 0; white-space: nowrap;
+  }
+  .h-item-wrap { border-bottom: 1px solid var(--bg); }
+  .h-item-wrap:last-child { border-bottom: none; }
+  .h-item-wrap .h-item { border-bottom: none; }
+  .h-note-display {
+    padding: 0 14px 11px 49px; font-size: 12px; color: var(--ink-soft); font-style: italic;
+    cursor: pointer; line-height: 1.4;
+  }
+  .h-note-edit { display: flex; gap: 6px; padding: 0 14px 11px 49px; }
+  .h-note-edit input {
+    flex: 1; border: 1.5px solid var(--line); border-radius: var(--radius-sm); padding: 7px 11px;
+    font-size: 12.5px; background: var(--bg); color: var(--ink); font-family: inherit;
+  }
+  .h-note-edit input:focus { outline: none; border-color: var(--calm); }
+  .h-note-edit button {
+    border: none; border-radius: var(--radius-sm); padding: 7px 12px; font-size: 12.5px; font-weight: 700;
+    cursor: pointer; background: var(--calm); color: #fff; flex-shrink: 0;
+  }
   .empty { text-align: center; padding: 26px 10px; color: var(--ink-soft); font-size: 13.5px; }
   .toggle-more { text-align: center; padding: 11px; font-size: 12.5px; font-weight: 700; color: var(--calm); cursor: pointer; border-top: 1px solid var(--bg); }
 
@@ -169,11 +190,16 @@
   /* Toast */
   .toast {
     position: fixed; bottom: 92px; left: 50%; transform: translateX(-50%) translateY(10px);
-    background: var(--bg-deep); color: #fff; padding: 10px 18px; border-radius: 999px;
+    background: var(--bg-deep); color: #fff; padding: 10px 14px 10px 18px; border-radius: 999px;
     font-size: 13.5px; font-weight: 600; opacity: 0; pointer-events: none;
     transition: all 0.25s ease; white-space: nowrap; z-index: 50;
+    display: flex; align-items: center; gap: 10px;
   }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+  .toast-note-btn {
+    background: rgba(255,255,255,0.18); color: #fff; border: none; border-radius: 999px;
+    padding: 5px 11px; font-size: 12px; font-weight: 700; cursor: pointer;
+  }
 
   /* Graph page */
   .filter-row { display: flex; gap: 6px; }
@@ -252,6 +278,7 @@
   let graphFilter = { type: 'tous', period: '7j' };
   let customContexts = [];
   let addingContext = { humain: false, chien: false };
+  let editingNoteId = null;
 
   const app = document.getElementById('app');
 
@@ -260,7 +287,7 @@
       const raw = localStorage.getItem('sibelle-entries');
       entries = raw ? JSON.parse(raw) : [];
     } catch (e) { entries = []; }
-    entries.forEach(e => { if (!e.type) e.type = 'humain'; });
+    entries.forEach(e => { if (!e.type) e.type = 'humain'; if (e.note === undefined) e.note = ''; });
     try {
       const rawCtx = localStorage.getItem('sibelle-custom-contexts');
       customContexts = rawCtx ? JSON.parse(rawCtx) : [];
@@ -289,11 +316,19 @@
   }
 
   function logEntry(type, reactionId) {
-    entries.unshift({ id: Date.now(), ts: new Date().toISOString(), context: selectedContext[type], type, reaction: reactionId });
+    const id = Date.now();
+    entries.unshift({ id, ts: new Date().toISOString(), context: selectedContext[type], type, reaction: reactionId, note: '' });
     save();
     render();
     const r = reactionMap(type)[reactionId];
-    showToast(r.label + ' · ' + selectedContext[type]);
+    showToast(r.label + ' · ' + selectedContext[type], id);
+  }
+
+  function saveNote(id, text) {
+    const e = entries.find(e => e.id === id);
+    if (e) { e.note = text.trim(); save(); }
+    editingNoteId = null;
+    render();
   }
 
   function deleteEntry(id) {
@@ -302,13 +337,26 @@
     render();
   }
 
-  function showToast(msg) {
+  function showToast(msg, entryId) {
     const t = document.createElement('div');
     t.className = 'toast';
-    t.textContent = 'Ajouté · ' + msg;
+    t.innerHTML = `<span>Ajouté · ${msg}</span>`;
+    if (entryId) {
+      const btn = document.createElement('button');
+      btn.className = 'toast-note-btn';
+      btn.textContent = '+ note';
+      btn.addEventListener('click', () => {
+        editingNoteId = entryId;
+        render();
+        t.remove();
+        const input = document.getElementById(`note-input-${entryId}`);
+        if (input) input.focus();
+      });
+      t.appendChild(btn);
+    }
     document.body.appendChild(t);
     requestAnimationFrame(() => t.classList.add('show'));
-    setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 1500);
+    setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 3500);
   }
 
   function startOfDay(d) { const x = new Date(d); x.setHours(0,0,0,0); return x; }
@@ -437,15 +485,25 @@
           const dateStr = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
           const timeStr = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
           return `
-            <div class="h-item">
-              <div class="h-left">
-                <span class="h-icon" style="--rc:var(--${r.colorVar}); --bs:var(--${r.colorVar}-soft)">${icon(r.icon)}</span>
-                <span class="h-label">${r.label} · ${e.context}</span>
+            <div class="h-item-wrap">
+              <div class="h-item">
+                <div class="h-left">
+                  <span class="h-icon" style="--rc:var(--${r.colorVar}); --bs:var(--${r.colorVar}-soft)">${icon(r.icon)}</span>
+                  <span class="h-label">${r.label} · ${e.context}</span>
+                </div>
+                <div class="h-left">
+                  <span class="h-meta">${dateStr}, ${timeStr}</span>
+                  <button class="h-note-toggle" data-note-toggle="${e.id}" title="Note">${e.note ? '📝' : '+ note'}</button>
+                  <button class="h-del" data-del="${e.id}">✕</button>
+                </div>
               </div>
-              <div class="h-left">
-                <span class="h-meta">${dateStr}, ${timeStr}</span>
-                <button class="h-del" data-del="${e.id}">✕</button>
-              </div>
+              ${e.note && editingNoteId !== e.id ? `<div class="h-note-display" data-note-toggle="${e.id}">${e.note}</div>` : ''}
+              ${editingNoteId === e.id ? `
+                <div class="h-note-edit">
+                  <input type="text" id="note-input-${e.id}" placeholder="Contexte, détail..." maxlength="140" value="${(e.note || '').replace(/"/g, '&quot;')}" />
+                  <button class="add-confirm" data-note-save="${e.id}">OK</button>
+                </div>
+              ` : ''}
             </div>
           `;
         }).join('')}
@@ -607,6 +665,30 @@
       });
       document.querySelectorAll('.h-del').forEach(el => {
         el.addEventListener('click', (ev) => { ev.stopPropagation(); deleteEntry(Number(el.dataset.del)); });
+      });
+      document.querySelectorAll('[data-note-toggle]').forEach(el => {
+        el.addEventListener('click', () => {
+          const id = Number(el.dataset.noteToggle);
+          editingNoteId = editingNoteId === id ? null : id;
+          render();
+          const input = document.getElementById(`note-input-${id}`);
+          if (input) input.focus();
+        });
+      });
+      document.querySelectorAll('[data-note-save]').forEach(el => {
+        el.addEventListener('click', () => {
+          const id = Number(el.dataset.noteSave);
+          const input = document.getElementById(`note-input-${id}`);
+          saveNote(id, input ? input.value : '');
+        });
+      });
+      document.querySelectorAll('.h-note-edit input').forEach(el => {
+        el.addEventListener('keydown', (ev) => {
+          if (ev.key === 'Enter') {
+            const id = Number(el.id.replace('note-input-', ''));
+            saveNote(id, el.value);
+          }
+        });
       });
       const toggle = document.querySelector(`[data-toggle="${type}"]`);
       if (toggle) toggle.addEventListener('click', () => { historyExpanded[type] = !historyExpanded[type]; render(); });
