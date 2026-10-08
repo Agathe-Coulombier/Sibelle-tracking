@@ -248,7 +248,19 @@
   .level-nav-btn:disabled { opacity: 0.3; cursor: default; }
   .level-title { font-size: 15px; font-weight: 800; text-align: center; flex: 1; }
   .level-steps { margin: 0 0 12px; padding-left: 20px; }
-  .level-steps li { font-size: 13px; line-height: 1.5; margin-bottom: 7px; color: var(--ink); }
+  .level-steps li { font-size: 13px; line-height: 1.5; margin-bottom: 9px; color: var(--ink); list-style: decimal; }
+  .step-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .step-text { flex: 1; }
+  .step-info-btn {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--line);
+    background: var(--bg); color: var(--ink-soft); font-size: 12px; font-weight: 700; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; line-height: 1;
+  }
+  .step-info-btn.open { background: var(--joy); border-color: var(--joy); color: #fff; }
+  .step-detail {
+    margin: 7px 0 0; padding: 10px 12px; background: var(--bg); border-radius: var(--radius-sm);
+    font-size: 12px; line-height: 1.5; color: var(--ink-soft);
+  }
   .level-criterion {
     font-size: 12px; background: var(--joy-soft); color: var(--ink); border-radius: var(--radius-sm);
     padding: 10px 12px; line-height: 1.4;
@@ -320,83 +332,116 @@
     {
       title: 'Les fondamentaux du marquage',
       steps: [
-        'Mot-marqueur unique ("Oui !"), friandise sortie après, jamais montrée avant.',
-        "Geste/leurre d'abord, mot ajouté seulement une fois fiable, puis testé seul.",
-        'Mot de fin ("C\'est bon") après chaque récompense.',
+        { text: 'Mot-marqueur unique ("Oui !")',
+          detail: "Objectif : lui apprendre que \"Oui !\" veut dire \"une friandise arrive\". Déroulé : mets des friandises en poche, invisibles. Reste là sans rien demander. Dès qu'elle fait n'importe quoi de neutre ou positif (elle te regarde, s'assoit seule, renifle calmement), dis \"Oui !\" d'une voix joyeuse, puis sors une friandise dans la seconde qui suit. Répète 8-10 fois, puis arrête. Piège à éviter : ne montre jamais la friandise avant de dire le mot, sinon elle répond à la vue de la friandise, pas au mot. Elle n'a pas besoin d'être active pour ça — même somnolente, le moindre regard suffit comme comportement à marquer." },
+        { text: "Geste d'abord, mot ensuite",
+          detail: "Objectif : éviter de mélanger mot et geste dès le départ (c'est ce qui a créé la confusion sur \"assis\"). Déroulé : entraîne le comportement avec un geste ou un leurre seul, sans dire le mot, pendant quelques jours. Une fois qu'elle répond de façon fiable au geste seul, ajoute le mot juste avant le geste, plusieurs dizaines de répétitions. Teste enfin le mot seul, sans geste. Pourquoi dans cet ordre : un chien apprend toujours l'indice le plus visible en premier (la main, la friandise) — si mot et geste arrivent ensemble dès le début, elle ignore le mot. Quand passer à la suite : elle répond au mot seul, sans geste ni friandise visible." },
+        { text: 'Mot de fin ("C\'est bon")',
+          detail: "Objectif : lui signaler clairement que l'exercice est terminé, pour éviter qu'elle reste braquée sur toi en attendant une suite. Déroulé : dis \"C'est bon\" (ou une formule similaire) juste après la dernière récompense de chaque session, puis détourne-toi ou change d'activité. Pourquoi c'est utile : sans signal de fin, certains chiens continuent à solliciter l'attention en boucle ; le mot de fin ferme proprement la parenthèse de travail." },
       ],
       criterion: "Elle répond de façon fiable au geste seul, sans voir la friandise à l'avance.",
     },
     {
       title: 'Attention / "Regarde-moi"',
       steps: [
-        'Son nom → dès qu\'elle regarde → marqueur + friandise, 8-10x par session.',
-        '"C\'est ton choix" : friandise au sol sous la main, récompense (autre friandise) quand elle décroche le regard.',
-        'Augmente la distraction progressivement (jouet, bruit léger, passage dans le couloir).',
+        { text: "Son nom → regard → récompense",
+          detail: "Objectif : qu'elle réponde à son nom par un regard vers toi, sans rien d'autre. Déroulé : dis son nom une fois. Dès qu'elle te regarde (même une fraction de seconde), marqueur (\"Oui !\") + friandise sortie de la poche après coup. 8-10 répétitions par session, dans le salon d'abord, au calme. Piège à éviter : ne répète pas le nom plusieurs fois d'affilée si elle ne réagit pas — dis-le une fois, attends, et si rien ne vient, raccourcis la distraction ambiante plutôt que de répéter plus fort." },
+        { text: '"C\'est ton choix"',
+          detail: "Objectif : lui apprendre à se détourner d'une tentation pour te regarder — la vraie base du \"regarde-moi\" utile en situation réelle. Déroulé : pose une friandise au sol, visible, à un mètre. Dès qu'elle va vers elle, couvre-la avec ta main sans un mot. Elle va insister un peu — laisse faire, main fermement posée. Dès qu'elle arrête et tourne la tête vers toi, marqueur immédiat + une AUTRE friandise prise dans ta poche (jamais celle au sol). Répète 8-10 fois. Piège à éviter : si tu retires ta main dès qu'elle touche la friandise, tu renforces l'insistance au lieu du désengagement — la main reste en place jusqu'au vrai décrochage du regard." },
+        { text: 'Augmente la distraction',
+          detail: "Objectif : généraliser le \"regarde-moi\" à des contextes un peu plus difficiles, en restant en intérieur contrôlé. Déroulé : une fois l'étape précédente fiable, remplace la friandise au sol par un jouet à faible valeur, puis introduis un petit bruit contrôlé (clé qui tombe, sac froissé), puis quelqu'un qui marche dans le couloir pendant l'exercice. Une seule variable à la fois — n'ajoute pas bruit ET mouvement en même temps tant que l'étape précédente n'est pas acquise." },
       ],
       criterion: 'Elle répond à son nom avec une distraction modérée, sans voir la friandise.',
     },
     {
       title: 'Rappel',
       steps: [
-        'Mot différent de "regarde-moi" (ex. "Ici !"). Couloir, distance courte, récompense généreuse.',
-        'Augmente la distance progressivement, toujours en intérieur d\'abord.',
-        'Extérieur calme, longe : varie la distance de rappel, ne jamais la rendre prévisible.',
-        'Travaille aussi le demi-tour (changer de direction sans prévenir).',
+        { text: 'Mot de rappel distinct ("Ici !")',
+          detail: "Objectif : un mot différent de \"regarde-moi\" — l'un demande juste un regard, l'autre demande qu'elle vienne physiquement jusqu'à toi. Ne jamais les mélanger, sinon elle hésite entre les deux réponses. Déroulé : dans le couloir de l'appart, éloigne-toi de quelques mètres, dis le mot de rappel avec enthousiasme, récompense généreusement dès qu'elle arrive jusqu'à toi (pas juste qu'elle démarre dans ta direction)." },
+        { text: 'Distance progressive en intérieur',
+          detail: "Objectif : solidifier le rappel avant de sortir. Déroulé : augmente progressivement la distance dans l'appartement (couloir, d'une pièce à l'autre), toujours en gardant la récompense généreuse à l'arrivée. Ne passe à l'extérieur que lorsque la version intérieure est fiable à chaque fois, pas une fois sur deux." },
+        { text: 'Extérieur calme, distance variable',
+          detail: "Objectif : éviter qu'elle anticipe une règle fixe (\"la limite c'est X mètres\"). Déroulé : en longe, dans un lieu calme, varie consciemment la distance à laquelle tu la rappelles — parfois proche, parfois plus loin, jamais au même repère. Pourquoi : si tu rappelles toujours à la même distance, elle apprend la distance, pas le réflexe de checker où tu es." },
+        { text: 'Le demi-tour',
+          detail: "Objectif : un deuxième outil, complémentaire au rappel verbal. Déroulé : en marchant, change de direction sans prévenir ni appeler — elle doit te remarquer et te rattraper elle-même. Récompense généreusement quand elle arrive à ta hauteur. Pourquoi c'est plus efficace qu'un rappel seul : ça muscle le réflexe \"je surveille où est Agathe\" plutôt qu'une simple réponse à un ordre ponctuel." },
       ],
       criterion: 'Revient sans hésiter dans le couloir et suit le demi-tour en extérieur calme.',
     },
     {
       title: 'Assis / Allongé au mot seul',
       steps: [
-        "Geste/leurre seul quelques jours, sans dire le mot.",
-        'Ajoute le mot juste avant le geste, plusieurs dizaines de répétitions.',
-        'Teste le mot seul, sans geste, après plusieurs jours.',
+        { text: 'Geste seul, sans le mot',
+          detail: "Objectif : corriger le problème déjà identifié (elle répondait à la main/la laisse, pas au mot \"assis\"). Déroulé : pendant quelques jours, entraîne uniquement avec le geste ou le leurre, sans jamais dire le mot \"assis\" en même temps. Laisse le comportement devenir fiable au geste seul avant de passer à l'étape suivante." },
+        { text: 'Ajoute le mot avant le geste',
+          detail: "Déroulé : une fois le geste fiable, dis le mot \"assis\" juste avant de faire le geste, systématiquement, plusieurs dizaines de répétitions sur plusieurs jours. L'ordre compte : toujours mot PUIS geste, jamais l'inverse, pour qu'elle associe le mot comme annonce du geste." },
+        { text: 'Teste le mot seul',
+          detail: "Déroulé : après plusieurs jours de l'étape précédente, dis \"assis\" sans faire le geste du tout, et observe si elle s'assoit. C'est le vrai test que le mot a pris le relais. Si rien ne vient, reviens à l'étape \"mot + geste\" quelques jours de plus avant de retester." },
+        { text: 'Ne récompense que le bon signal',
+          detail: "Déroulé : si elle s'allonge alors que tu as dit \"assis\", pas de récompense — redemande calmement, sans répéter le mot plusieurs fois ni hausser le ton. Un chien ne comprend pas mieux un mot répété ou dit plus fort." },
       ],
       criterion: "S'assoit/s'allonge au mot seul, sans geste ni friandise visible.",
     },
     {
       title: '"Attends" à la porte d\'entrée',
       steps: [
-        'Porte fermée, "assis", main sur la poignée — si elle bouge, retire la main, recommence.',
-        "Ouvre quelques centimètres en la maintenant en \"attends\", referme, récompense.",
-        'Augmente l\'ouverture progressivement puis porte grande ouverte jusqu\'au signal "Ok, go".',
+        { text: 'Porte fermée, main sur la poignée',
+          detail: "Objectif : poser la base avant d'ouvrir quoi que ce soit — priorité sécurité n°1 vu votre premier étage sur rue passante. Déroulé : porte fermée, demande \"assis\", pose la main sur la poignée sans l'actionner. Si elle bouge/se lève, retire la main et recommence depuis le début. Répète jusqu'à ce qu'elle reste assise pendant que ta main est sur la poignée." },
+        { text: 'Ouverture progressive',
+          detail: "Déroulé : ouvre la porte de quelques centimètres seulement en la maintenant en \"attends\" (verbalement ou avec la main), referme, récompense. Augmente l'ouverture de quelques centimètres à chaque session suivante, sur plusieurs jours — jamais d'un coup." },
+        { text: 'Porte grande ouverte + signal de libération',
+          detail: "Déroulé : une fois l'ouverture progressive acquise, porte grande ouverte, elle doit rester assise jusqu'à un signal clair de ta part (\"Ok, go\"). Ne la libère jamais si elle a bougé de sa propre initiative juste avant — referme et recommence plutôt que de céder." },
       ],
       criterion: 'Porte grande ouverte, aucune initiative de sortir sans signal, de façon fiable.',
     },
     {
       title: 'Laisse détendue + qui mène',
       steps: [
-        "Intérieur : dès qu'elle tire, arrête-toi (statue), reprends quand la laisse redevient molle.",
-        'Extérieur calme : demi-tour pour renforcer le suivi.',
-        'Alterne moments "elle choisit" et moments "tu mènes" — ne pas imposer tout le trajet.',
-        "Si elle s'assoit et résiste, attends un relâchement avant de reprendre, ne cède pas tout de suite.",
+        { text: 'La statue (intérieur)',
+          detail: "Déroulé : dans le couloir, harnais + laisse, marche quelques pas. Dès qu'elle tire, arrête-toi complètement (statue, aucun mot), attends que la laisse redevienne molle d'elle-même, puis reprends la marche. Répète à chaque tension. Pourquoi : avancer malgré la tension récompense le tirage ; s'arrêter lui apprend que tirer ne fait pas avancer plus vite." },
+        { text: 'Le demi-tour en extérieur',
+          detail: "Déroulé : reprends l'exercice du niveau 3 (rappel), cette fois en balade réelle dans un quartier calme — change de direction sans prévenir, récompense quand elle suit." },
+        { text: 'Alterner qui mène',
+          detail: "Objectif : réduire la friction générale en lui donnant de vrais moments d'autonomie. Déroulé : découpe consciemment la balade en moments \"elle choisit\" (elle renifle, explore, choisit la direction sur une portion) et moments \"tu mènes\" (elle suit sans négocier). Ne pas imposer tout le trajet en permanence — un chien curieux a besoin de vrais moments de liberté olfactive." },
+        { text: 'Ne pas céder à l\'opposition',
+          detail: "Déroulé : si elle s'assoit et tire dans l'autre sens, n'inverse pas immédiatement ta direction — attends un relâchement même minime de sa part avant de reprendre dans TA direction. Pourquoi : céder systématiquement à ce moment-là lui apprend que s'asseoir et tirer fait changer tes plans." },
       ],
       criterion: 'Marche sans tension constante, suit ta direction après un bref relâchement.',
     },
     {
       title: '"Regarde ça" / désengagement à distance',
       steps: [
-        'Bonne distance d\'un déclencheur réel : regard calme → marqueur + friandise, avant la fixation intense.',
-        "Réduis la distance progressivement, seulement quand l'étape précédente est fiable.",
-        'Repère la fixation naissante (corps raide, oreilles dressées, regard verrouillé) pour interrompre tôt.',
+        { text: 'Marquer le regard calme à distance',
+          detail: "Prérequis : niveaux 2 et 3 acquis. Déroulé : à bonne distance d'un déclencheur réel (petit chien, passant), dès qu'elle le regarde calmement (pas encore fixée intensément), marqueur + friandise. Répète à chaque nouvelle apparition d'un déclencheur, toujours à une distance où elle reste capable de se détourner facilement." },
+        { text: 'Réduire la distance progressivement',
+          detail: "Déroulé : une fois l'étape précédente fiable à une distance donnée, réduis-la petit à petit sur plusieurs séances. Ne force jamais le rapprochement en une fois — si elle se fixe intensément sans pouvoir décrocher, tu es allée trop vite, recule à la distance précédente." },
+        { text: 'Repérer la fixation naissante',
+          detail: "Déroulé : observe les signes avant la charge — corps qui se raidit, poids basculé vers l'avant, oreilles dressées, regard verrouillé, queue qui se redresse. C'est ce moment précis qu'il faut marquer/interrompre, pas après le premier pas vers le déclencheur." },
+        { text: 'Interrompre si besoin',
+          detail: "Déroulé si elle fixe trop intensément : bloque la ligne de vue avec ton corps, tension ferme (pas sèche) sur la laisse, mot-signal enjoué, éloigne-toi physiquement dès qu'elle décroche. Jamais un \"non\" sec — ça associerait le déclencheur à une ambiance négative avec toi plutôt qu'au calme recherché." },
       ],
       criterion: 'Décroche le regard d\'un déclencheur modéré vers toi sans intervention physique.',
     },
     {
       title: 'Contextes spécifiques (petits chiens, enfants, lieux fermés)',
       steps: [
-        'Laisse/longe systématique : petits chiens visibles, lieux fermés familiers, chats, enfants à proximité.',
-        "Dès qu'une personne/animal apparaît dans le champ, raccourcis/rappelle — le contexte déclenche ton action, pas sa réaction à elle.",
-        'Distingue charge "vénère" (corps raide, queue haute rigide) de charge "jeu" (corps souple, queue mobile) — garde la vigilance dans les deux cas tant que l\'autre n\'est pas clairement tolérant.',
+        { text: 'Laisse/longe systématique',
+          detail: "Règle fixe, sans exception pour l'instant : petits chiens visibles, lieux fermés semi-familiers à sortie limitée (impasses, cours), présence de chats en liberté, enfants à proximité. Pas de détachement dans ces contextes, indépendamment de son comportement du moment." },
+        { text: 'Le contexte déclenche ton action',
+          detail: "Déroulé : dès qu'une personne ou un animal apparaît dans le champ, raccourcis la longe ou rappelle immédiatement — avant même de regarder ce qu'elle fait. Pourquoi : sa fixation est souvent trop rapide pour que tu aies le temps de réagir à temps ; le contexte (quelqu'un apparaît) est un signal plus fiable pour toi que sa réaction à elle." },
+        { text: 'Distinguer jeu et menace',
+          detail: "Repères : charge \"vénère\" = corps raide, poids vers l'avant tendu, queue haute et rigide, regard fixe et dur. Charge \"jeu\" = corps souple malgré la vitesse, queue mobile, regard qui va et vient, parfois une posture d'invitation (avant du corps abaissé). Important : même en cas de charge-jeu, l'autre chien/humain ne peut pas le deviner — garde la vigilance tant que ce n'est pas un chien/une personne clairement tolérante et détendue." },
       ],
       criterion: 'Fréquence des épisodes en baisse sur plusieurs semaines (voir Graphiques) ; rappel fiable même face à un chien à distance.',
     },
     {
       title: 'Généralisation',
       steps: [
-        'Reprends chaque exercice dans des contextes nouveaux : trajet, horaire, visiteur.',
-        'Terrasse : dos au flux, occupation active (tapis de léchage, "regarde-moi" en renforcement variable).',
-        'Club canin en complément, en prévenant du profil (distance de travail nécessaire).',
+        { text: 'Nouveaux contextes',
+          detail: "Déroulé : reprends chaque exercice précédent dans des situations nouvelles — un autre trajet de balade, un autre moment de la journée, un visiteur qui sonne à la porte. Un comportement acquis dans un seul contexte ne se généralise pas automatiquement ailleurs." },
+        { text: 'Terrasse : gestion + occupation',
+          detail: "Déroulé : position dos au flux de passage (contre un mur, pas en bord de trottoir), et propose une occupation active dès l'installation — tapis de léchage avec une partie de son repas, ou sollicitations régulières de \"regarde-moi\" en renforcement variable. Ce n'est pas une menace perçue mais de la frustration de contention (attachée, flux constant, aucun exutoire) — canaliser l'excitation avant qu'elle déborde plutôt que d'attendre une réaction pour intervenir." },
+        { text: 'Club canin en complément',
+          detail: "Déroulé : avant d'inscrire, appelle et préviens explicitement du profil (réactivité envers les groupes de chiens, besoin d'une distance de travail plus grande que la normale). Demande comment ils gèrent la distance entre chiens en début de séance — leur réponse te dira si le format est adapté." },
       ],
       criterion: "Pas de calendrier rigide — le critère de chaque niveau compte plus que la date.",
     },
@@ -416,6 +461,7 @@
   let editingNoteId = null;
   let currentLevel = 0;
   let trainingDays = {};
+  let expandedSteps = new Set();
 
   const app = document.getElementById('app');
 
@@ -844,7 +890,19 @@
           <button class="level-nav-btn" id="level-next" ${currentLevel === LEVELS.length - 1 ? 'disabled' : ''}>${icon('chevronRight')}</button>
         </div>
         <ol class="level-steps">
-          ${lvl.steps.map(s => `<li>${s}</li>`).join('')}
+          ${lvl.steps.map((s, i) => {
+            const key = `${currentLevel}-${i}`;
+            const open = expandedSteps.has(key);
+            return `
+              <li>
+                <div class="step-row">
+                  <span class="step-text">${s.text}</span>
+                  <button class="step-info-btn ${open ? 'open' : ''}" data-step-toggle="${key}">ⓘ</button>
+                </div>
+                ${open ? `<div class="step-detail">${s.detail}</div>` : ''}
+              </li>
+            `;
+          }).join('')}
         </ol>
         <div class="level-criterion"><strong>Critère pour passer au niveau suivant :</strong> ${lvl.criterion}</div>
         ${currentLevel < LEVELS.length - 1 ? `<button class="level-validate-btn" id="validate-level">Niveau acquis → niveau suivant</button>` : ''}
@@ -972,6 +1030,14 @@
         el.addEventListener('click', () => {
           currentLevel = Number(el.dataset.gotoLevel);
           saveTrainingLevel();
+          render();
+        });
+      });
+      document.querySelectorAll('[data-step-toggle]').forEach(el => {
+        el.addEventListener('click', () => {
+          const key = el.dataset.stepToggle;
+          if (expandedSteps.has(key)) expandedSteps.delete(key);
+          else expandedSteps.add(key);
           render();
         });
       });
