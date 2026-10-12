@@ -218,22 +218,39 @@
 
   svg text { font-family: inherit; }
 
-  /* Programme tab */
-  .streak-row { display: flex; gap: 10px; align-items: stretch; }
-  .streak-badge {
-    display: flex; align-items: center; gap: 10px; background: var(--card); border: 1.5px solid var(--line);
-    border-radius: var(--radius-sm); padding: 10px 16px; box-shadow: 0 1px 3px rgba(35,32,27,0.08);
+  /* Programme tab — streak hero */
+  .streak-hero {
+    background: var(--bg-deep); border-radius: var(--radius); padding: 16px 16px 14px;
+    box-shadow: 0 1px 3px rgba(35,32,27,0.12);
   }
-  .streak-ic { color: var(--charge); width: 26px; height: 26px; flex-shrink: 0; }
-  .streak-ic svg { width: 100%; height: 100%; }
-  .streak-n { font-size: 20px; font-weight: 800; color: var(--ink); line-height: 1; }
-  .streak-l { font-size: 10.5px; color: var(--ink-soft); font-weight: 600; text-transform: uppercase; margin-top: 2px; }
+  .streak-hero-top { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .streak-hero-main { display: flex; align-items: center; gap: 10px; flex: 1; }
+  .streak-hero-ic { color: var(--charge); width: 30px; height: 30px; flex-shrink: 0; }
+  .streak-hero-ic svg { width: 100%; height: 100%; }
+  .streak-hero-n { font-size: 26px; font-weight: 800; color: #fff; line-height: 1; font-variant-numeric: tabular-nums; }
+  .streak-hero-l { font-size: 11px; color: rgba(255,255,255,0.65); font-weight: 600; text-transform: uppercase; margin-top: 2px; letter-spacing: 0.03em; }
   .day-check-btn {
-    flex: 1; border: none; border-radius: var(--radius-sm); background: var(--calm); color: #fff;
-    font-size: 13.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+    border: none; border-radius: 999px; background: var(--calm); color: #fff; padding: 10px 16px;
+    font-size: 12.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+    white-space: nowrap; flex-shrink: 0;
   }
-  .day-check-btn svg { width: 16px; height: 16px; }
-  .day-check-btn.done { background: var(--calm-soft); color: var(--calm); border: 1.5px solid var(--calm); }
+  .day-check-btn svg { width: 14px; height: 14px; }
+  .day-check-btn.done { background: rgba(255,255,255,0.14); color: #fff; }
+
+  .week-row { display: flex; justify-content: space-between; gap: 4px; }
+  .week-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 14.28%; }
+  .week-circle {
+    width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; box-sizing: border-box;
+  }
+  .week-circle svg { width: 14px; height: 14px; }
+  .week-circle.done { background: var(--calm); border-color: var(--calm); }
+  .week-circle.today { border-color: #fff; border-width: 2px; }
+  .week-label { font-size: 9.5px; font-weight: 700; color: rgba(255,255,255,0.55); text-transform: uppercase; }
+  .week-label.today { color: #fff; }
+
+  .level-progress-track { height: 8px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+  .level-progress-fill { height: 100%; background: var(--joy); border-radius: 999px; transition: width 0.3s ease; }
 
   .level-card {
     background: var(--card); border: 1.5px solid var(--line); border-radius: var(--radius);
@@ -247,10 +264,15 @@
   .level-nav-btn svg { width: 16px; height: 16px; }
   .level-nav-btn:disabled { opacity: 0.3; cursor: default; }
   .level-title { font-size: 15px; font-weight: 800; text-align: center; flex: 1; }
+  .level-intro {
+    font-size: 12px; color: var(--ink-soft); font-style: italic; line-height: 1.5;
+    margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--bg);
+  }
   .level-steps { margin: 0 0 12px; padding-left: 20px; }
   .level-steps li { font-size: 13px; line-height: 1.5; margin-bottom: 9px; color: var(--ink); list-style: decimal; }
   .step-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .step-text { flex: 1; }
+  .step-rhythm { display: block; font-size: 11px; font-weight: 500; color: var(--ink-soft); font-style: italic; margin-top: 2px; }
   .step-info-btn {
     flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--line);
     background: var(--bg); color: var(--ink-soft); font-size: 12px; font-weight: 700; cursor: pointer;
@@ -267,11 +289,25 @@
   }
   .level-criterion strong { color: var(--joy); }
   .level-validate-btn {
-    width: 100%; margin-top: 12px; border: none; border-radius: var(--radius-sm); padding: 11px;
+    width: 100%; margin-top: 12px; border: none; border-radius: 999px; padding: 12px;
     background: var(--calm); color: #fff; font-size: 13.5px; font-weight: 700; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
   }
-  .level-overview-item { cursor: pointer; }
-  .level-overview-item.current .h-label { font-weight: 800; color: var(--joy); }
+  .level-validate-btn svg { width: 15px; height: 15px; }
+
+  .level-overview-item {
+    display: flex; align-items: center; gap: 10px; padding: 11px 14px; cursor: pointer;
+    border-bottom: 1px solid var(--bg); border-left: 3px solid var(--rc);
+  }
+  .level-overview-item:last-child { border-bottom: none; }
+  .level-overview-ic {
+    width: 26px; height: 26px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    background: var(--bs); color: var(--rc); flex-shrink: 0;
+  }
+  .level-overview-ic svg { width: 13px; height: 13px; }
+  .level-overview-label { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .level-overview-item.current .level-overview-label { font-weight: 800; color: var(--joy); }
+  .level-overview-item.past .level-overview-label { color: var(--ink-soft); }
 </style>
 </head>
 <body>
@@ -331,24 +367,28 @@
   const LEVELS = [
     {
       title: 'Les fondamentaux du marquage',
+      intro: "Un seul principe à retenir pour tout le programme : toujours séparer geste et mot (geste seul d'abord, mot ajouté ensuite, puis testé seul) — c'est appliqué en détail au niveau 4. Ici, on pose juste les deux outils de base.",
       steps: [
         { text: 'Mot-marqueur unique ("Oui !")',
+          rhythm: '8-10x, 2-3 fois par jour, entre 3 et 7 jours',
           detail: "Objectif : lui apprendre que \"Oui !\" veut dire \"une friandise arrive\". Déroulé : mets des friandises en poche, invisibles. Reste là sans rien demander. Dès qu'elle fait n'importe quoi de neutre ou positif (elle te regarde, s'assoit seule, renifle calmement), dis \"Oui !\" d'une voix joyeuse, puis sors une friandise dans la seconde qui suit. Répète 8-10 fois, puis arrête. Piège à éviter : ne montre jamais la friandise avant de dire le mot, sinon elle répond à la vue de la friandise, pas au mot. Elle n'a pas besoin d'être active pour ça — même somnolente, le moindre regard suffit comme comportement à marquer." },
-        { text: "Geste d'abord, mot ensuite",
-          detail: "Objectif : éviter de mélanger mot et geste dès le départ (c'est ce qui a créé la confusion sur \"assis\"). Déroulé : entraîne le comportement avec un geste ou un leurre seul, sans dire le mot, pendant quelques jours. Une fois qu'elle répond de façon fiable au geste seul, ajoute le mot juste avant le geste, plusieurs dizaines de répétitions. Teste enfin le mot seul, sans geste. Pourquoi dans cet ordre : un chien apprend toujours l'indice le plus visible en premier (la main, la friandise) — si mot et geste arrivent ensemble dès le début, elle ignore le mot. Quand passer à la suite : elle répond au mot seul, sans geste ni friandise visible." },
         { text: 'Mot de fin ("C\'est bon")',
+          rhythm: 'À chaque session, dès le premier jour — s\'installe en même temps que le reste',
           detail: "Objectif : lui signaler clairement que l'exercice est terminé, pour éviter qu'elle reste braquée sur toi en attendant une suite. Déroulé : dis \"C'est bon\" (ou une formule similaire) juste après la dernière récompense de chaque session, puis détourne-toi ou change d'activité. Pourquoi c'est utile : sans signal de fin, certains chiens continuent à solliciter l'attention en boucle ; le mot de fin ferme proprement la parenthèse de travail." },
       ],
-      criterion: "Elle répond de façon fiable au geste seul, sans voir la friandise à l'avance.",
+      criterion: "Le mot-marqueur déclenche une attente claire de récompense (elle se tourne vers toi dès qu'elle l'entend).",
     },
     {
       title: 'Attention / "Regarde-moi"',
       steps: [
         { text: "Son nom → regard → récompense",
+          rhythm: '8-10x, 2-3 fois par jour, entre 5 et 10 jours',
           detail: "Objectif : qu'elle réponde à son nom par un regard vers toi, sans rien d'autre. Déroulé : dis son nom une fois. Dès qu'elle te regarde (même une fraction de seconde), marqueur (\"Oui !\") + friandise sortie de la poche après coup. 8-10 répétitions par session, dans le salon d'abord, au calme. Piège à éviter : ne répète pas le nom plusieurs fois d'affilée si elle ne réagit pas — dis-le une fois, attends, et si rien ne vient, raccourcis la distraction ambiante plutôt que de répéter plus fort." },
         { text: '"C\'est ton choix"',
+          rhythm: '5-8x, 1-2 fois par jour, entre 5 et 10 jours',
           detail: "Objectif : lui apprendre à se détourner d'une tentation pour te regarder — la vraie base du \"regarde-moi\" utile en situation réelle. Déroulé : pose une friandise au sol, visible, à un mètre. Dès qu'elle va vers elle, couvre-la avec ta main sans un mot. Elle va insister un peu — laisse faire, main fermement posée. Dès qu'elle arrête et tourne la tête vers toi, marqueur immédiat + une AUTRE friandise prise dans ta poche (jamais celle au sol). Répète 8-10 fois. Piège à éviter : si tu retires ta main dès qu'elle touche la friandise, tu renforces l'insistance au lieu du désengagement — la main reste en place jusqu'au vrai décrochage du regard." },
         { text: 'Augmente la distraction',
+          rhythm: '5-8x, 1 fois par jour, entre 1 et 2 semaines (une seule variable à la fois)',
           detail: "Objectif : généraliser le \"regarde-moi\" à des contextes un peu plus difficiles, en restant en intérieur contrôlé. Déroulé : une fois l'étape précédente fiable, remplace la friandise au sol par un jouet à faible valeur, puis introduis un petit bruit contrôlé (clé qui tombe, sac froissé), puis quelqu'un qui marche dans le couloir pendant l'exercice. Une seule variable à la fois — n'ajoute pas bruit ET mouvement en même temps tant que l'étape précédente n'est pas acquise." },
       ],
       criterion: 'Elle répond à son nom avec une distraction modérée, sans voir la friandise.',
@@ -357,26 +397,35 @@
       title: 'Rappel',
       steps: [
         { text: 'Mot de rappel distinct ("Ici !")',
+          rhythm: '5-8x, 1-2 fois par jour, entre 5 et 7 jours',
           detail: "Objectif : un mot différent de \"regarde-moi\" — l'un demande juste un regard, l'autre demande qu'elle vienne physiquement jusqu'à toi. Ne jamais les mélanger, sinon elle hésite entre les deux réponses. Déroulé : dans le couloir de l'appart, éloigne-toi de quelques mètres, dis le mot de rappel avec enthousiasme, récompense généreusement dès qu'elle arrive jusqu'à toi (pas juste qu'elle démarre dans ta direction)." },
         { text: 'Distance progressive en intérieur',
+          rhythm: '5-8x, 1 fois par jour, entre 7 et 10 jours',
           detail: "Objectif : solidifier le rappel avant de sortir. Déroulé : augmente progressivement la distance dans l'appartement (couloir, d'une pièce à l'autre), toujours en gardant la récompense généreuse à l'arrivée. Ne passe à l'extérieur que lorsque la version intérieure est fiable à chaque fois, pas une fois sur deux." },
         { text: 'Extérieur calme, distance variable',
+          rhythm: '5-8x par sortie, à chaque balade, sur 10 à 14 jours',
           detail: "Objectif : éviter qu'elle anticipe une règle fixe (\"la limite c'est X mètres\"). Déroulé : en longe, dans un lieu calme, varie consciemment la distance à laquelle tu la rappelles — parfois proche, parfois plus loin, jamais au même repère. Pourquoi : si tu rappelles toujours à la même distance, elle apprend la distance, pas le réflexe de checker où tu es." },
         { text: 'Le demi-tour',
+          rhythm: '3-5x par balade, quotidien, sur 10 à 14 jours',
           detail: "Objectif : un deuxième outil, complémentaire au rappel verbal. Déroulé : en marchant, change de direction sans prévenir ni appeler — elle doit te remarquer et te rattraper elle-même. Récompense généreusement quand elle arrive à ta hauteur. Pourquoi c'est plus efficace qu'un rappel seul : ça muscle le réflexe \"je surveille où est Agathe\" plutôt qu'une simple réponse à un ordre ponctuel." },
       ],
       criterion: 'Revient sans hésiter dans le couloir et suit le demi-tour en extérieur calme.',
     },
     {
       title: 'Assis / Allongé au mot seul',
+      intro: "C'est ici qu'on applique en entier le principe geste-puis-mot posé au niveau 1 — la méthode complète qui a corrigé le problème initial sur \"assis\".",
       steps: [
         { text: 'Geste seul, sans le mot',
+          rhythm: '5-8x, 1-2 fois par jour, entre 3 et 5 jours',
           detail: "Objectif : corriger le problème déjà identifié (elle répondait à la main/la laisse, pas au mot \"assis\"). Déroulé : pendant quelques jours, entraîne uniquement avec le geste ou le leurre, sans jamais dire le mot \"assis\" en même temps. Laisse le comportement devenir fiable au geste seul avant de passer à l'étape suivante." },
         { text: 'Ajoute le mot avant le geste',
+          rhythm: '10-15x, 2 fois par jour, entre 7 et 10 jours',
           detail: "Déroulé : une fois le geste fiable, dis le mot \"assis\" juste avant de faire le geste, systématiquement, plusieurs dizaines de répétitions sur plusieurs jours. L'ordre compte : toujours mot PUIS geste, jamais l'inverse, pour qu'elle associe le mot comme annonce du geste." },
         { text: 'Teste le mot seul',
+          rhythm: 'Quelques essais par jour, sur 3 à 5 jours',
           detail: "Déroulé : après plusieurs jours de l'étape précédente, dis \"assis\" sans faire le geste du tout, et observe si elle s'assoit. C'est le vrai test que le mot a pris le relais. Si rien ne vient, reviens à l'étape \"mot + geste\" quelques jours de plus avant de retester." },
         { text: 'Ne récompense que le bon signal',
+          rhythm: 'En continu, à chaque occasion, dès cette étape',
           detail: "Déroulé : si elle s'allonge alors que tu as dit \"assis\", pas de récompense — redemande calmement, sans répéter le mot plusieurs fois ni hausser le ton. Un chien ne comprend pas mieux un mot répété ou dit plus fort." },
       ],
       criterion: "S'assoit/s'allonge au mot seul, sans geste ni friandise visible.",
@@ -385,10 +434,13 @@
       title: '"Attends" à la porte d\'entrée',
       steps: [
         { text: 'Porte fermée, main sur la poignée',
+          rhythm: '5-10x, 1-2 fois par jour, entre 5 et 7 jours',
           detail: "Objectif : poser la base avant d'ouvrir quoi que ce soit — priorité sécurité n°1 vu votre premier étage sur rue passante. Déroulé : porte fermée, demande \"assis\", pose la main sur la poignée sans l'actionner. Si elle bouge/se lève, retire la main et recommence depuis le début. Répète jusqu'à ce qu'elle reste assise pendant que ta main est sur la poignée." },
         { text: 'Ouverture progressive',
+          rhythm: '5x, 1 fois par jour, sur 1 à 2 semaines',
           detail: "Déroulé : ouvre la porte de quelques centimètres seulement en la maintenant en \"attends\" (verbalement ou avec la main), referme, récompense. Augmente l'ouverture de quelques centimètres à chaque session suivante, sur plusieurs jours — jamais d'un coup." },
         { text: 'Porte grande ouverte + signal de libération',
+          rhythm: 'À chaque sortie réelle, quotidien, sur 2 à 3 semaines pour devenir fiable',
           detail: "Déroulé : une fois l'ouverture progressive acquise, porte grande ouverte, elle doit rester assise jusqu'à un signal clair de ta part (\"Ok, go\"). Ne la libère jamais si elle a bougé de sa propre initiative juste avant — referme et recommence plutôt que de céder." },
       ],
       criterion: 'Porte grande ouverte, aucune initiative de sortir sans signal, de façon fiable.',
@@ -397,12 +449,16 @@
       title: 'Laisse détendue + qui mène',
       steps: [
         { text: 'La statue (intérieur)',
+          rhythm: 'À chaque sortie, quotidien, sur 1 à 2 semaines',
           detail: "Déroulé : dans le couloir, harnais + laisse, marche quelques pas. Dès qu'elle tire, arrête-toi complètement (statue, aucun mot), attends que la laisse redevienne molle d'elle-même, puis reprends la marche. Répète à chaque tension. Pourquoi : avancer malgré la tension récompense le tirage ; s'arrêter lui apprend que tirer ne fait pas avancer plus vite." },
         { text: 'Le demi-tour en extérieur',
+          rhythm: '3-5x par balade, quotidien, en continu',
           detail: "Déroulé : reprends l'exercice du niveau 3 (rappel), cette fois en balade réelle dans un quartier calme — change de direction sans prévenir, récompense quand elle suit." },
         { text: 'Alterner qui mène',
+          rhythm: 'À chaque balade, en continu',
           detail: "Objectif : réduire la friction générale en lui donnant de vrais moments d'autonomie. Déroulé : découpe consciemment la balade en moments \"elle choisit\" (elle renifle, explore, choisit la direction sur une portion) et moments \"tu mènes\" (elle suit sans négocier). Ne pas imposer tout le trajet en permanence — un chien curieux a besoin de vrais moments de liberté olfactive." },
         { text: 'Ne pas céder à l\'opposition',
+          rhythm: 'À chaque occasion, en continu',
           detail: "Déroulé : si elle s'assoit et tire dans l'autre sens, n'inverse pas immédiatement ta direction — attends un relâchement même minime de sa part avant de reprendre dans TA direction. Pourquoi : céder systématiquement à ce moment-là lui apprend que s'asseoir et tirer fait changer tes plans." },
       ],
       criterion: 'Marche sans tension constante, suit ta direction après un bref relâchement.',
@@ -411,12 +467,16 @@
       title: '"Regarde ça" / désengagement à distance',
       steps: [
         { text: 'Marquer le regard calme à distance',
+          rhythm: '5-10x par sortie où l\'occasion se présente, sur 2 à 3 semaines',
           detail: "Prérequis : niveaux 2 et 3 acquis. Déroulé : à bonne distance d'un déclencheur réel (petit chien, passant), dès qu'elle le regarde calmement (pas encore fixée intensément), marqueur + friandise. Répète à chaque nouvelle apparition d'un déclencheur, toujours à une distance où elle reste capable de se détourner facilement." },
         { text: 'Réduire la distance progressivement',
+          rhythm: 'Quelques essais par sortie, sur plusieurs semaines, sans forcer le rythme',
           detail: "Déroulé : une fois l'étape précédente fiable à une distance donnée, réduis-la petit à petit sur plusieurs séances. Ne force jamais le rapprochement en une fois — si elle se fixe intensément sans pouvoir décrocher, tu es allée trop vite, recule à la distance précédente." },
         { text: 'Repérer la fixation naissante',
+          rhythm: 'Observation continue, à chaque sortie',
           detail: "Déroulé : observe les signes avant la charge — corps qui se raidit, poids basculé vers l'avant, oreilles dressées, regard verrouillé, queue qui se redresse. C'est ce moment précis qu'il faut marquer/interrompre, pas après le premier pas vers le déclencheur." },
         { text: 'Interrompre si besoin',
+          rhythm: 'Au cas par cas, dès que la situation l\'exige',
           detail: "Déroulé si elle fixe trop intensément : bloque la ligne de vue avec ton corps, tension ferme (pas sèche) sur la laisse, mot-signal enjoué, éloigne-toi physiquement dès qu'elle décroche. Jamais un \"non\" sec — ça associerait le déclencheur à une ambiance négative avec toi plutôt qu'au calme recherché." },
       ],
       criterion: 'Décroche le regard d\'un déclencheur modéré vers toi sans intervention physique.',
@@ -425,10 +485,13 @@
       title: 'Contextes spécifiques (petits chiens, enfants, lieux fermés)',
       steps: [
         { text: 'Laisse/longe systématique',
+          rhythm: 'Règle permanente, sans exception — pas un exercice ponctuel',
           detail: "Règle fixe, sans exception pour l'instant : petits chiens visibles, lieux fermés semi-familiers à sortie limitée (impasses, cours), présence de chats en liberté, enfants à proximité. Pas de détachement dans ces contextes, indépendamment de son comportement du moment." },
         { text: 'Le contexte déclenche ton action',
+          rhythm: 'À chaque occasion, quelques semaines pour devenir un réflexe chez toi',
           detail: "Déroulé : dès qu'une personne ou un animal apparaît dans le champ, raccourcis la longe ou rappelle immédiatement — avant même de regarder ce qu'elle fait. Pourquoi : sa fixation est souvent trop rapide pour que tu aies le temps de réagir à temps ; le contexte (quelqu'un apparaît) est un signal plus fiable pour toi que sa réaction à elle." },
         { text: 'Distinguer jeu et menace',
+          rhythm: 'Observation continue, s\'affine avec l\'expérience sur plusieurs mois',
           detail: "Repères : charge \"vénère\" = corps raide, poids vers l'avant tendu, queue haute et rigide, regard fixe et dur. Charge \"jeu\" = corps souple malgré la vitesse, queue mobile, regard qui va et vient, parfois une posture d'invitation (avant du corps abaissé). Important : même en cas de charge-jeu, l'autre chien/humain ne peut pas le deviner — garde la vigilance tant que ce n'est pas un chien/une personne clairement tolérante et détendue." },
       ],
       criterion: 'Fréquence des épisodes en baisse sur plusieurs semaines (voir Graphiques) ; rappel fiable même face à un chien à distance.',
@@ -437,10 +500,13 @@
       title: 'Généralisation',
       steps: [
         { text: 'Nouveaux contextes',
+          rhythm: '1-2 nouveaux contextes par semaine',
           detail: "Déroulé : reprends chaque exercice précédent dans des situations nouvelles — un autre trajet de balade, un autre moment de la journée, un visiteur qui sonne à la porte. Un comportement acquis dans un seul contexte ne se généralise pas automatiquement ailleurs." },
         { text: 'Terrasse : gestion + occupation',
+          rhythm: 'À chaque sortie terrasse',
           detail: "Déroulé : position dos au flux de passage (contre un mur, pas en bord de trottoir), et propose une occupation active dès l'installation — tapis de léchage avec une partie de son repas, ou sollicitations régulières de \"regarde-moi\" en renforcement variable. Ce n'est pas une menace perçue mais de la frustration de contention (attachée, flux constant, aucun exutoire) — canaliser l'excitation avant qu'elle déborde plutôt que d'attendre une réaction pour intervenir." },
         { text: 'Club canin en complément',
+          rhythm: 'Hebdomadaire, format cours collectif',
           detail: "Déroulé : avant d'inscrire, appelle et préviens explicitement du profil (réactivité envers les groupes de chiens, besoin d'une distance de travail plus grande que la normale). Demande comment ils gèrent la distance entre chiens en début de séance — leur réponse te dira si le format est adapté." },
       ],
       criterion: "Pas de calendrier rigide — le critère de chaque niveau compte plus que la date.",
@@ -529,6 +595,30 @@
       d.setDate(d.getDate() - 1);
     }
     return streak;
+  }
+
+  function computeBestStreak() {
+    const keys = Object.keys(trainingDays).sort();
+    if (keys.length === 0) return 0;
+    let best = 0, run = 0, prev = null;
+    keys.forEach(k => {
+      const d = new Date(k + 'T00:00:00');
+      if (prev) {
+        const diffDays = Math.round((d - prev) / 86400000);
+        run = diffDays === 1 ? run + 1 : 1;
+      } else {
+        run = 1;
+      }
+      best = Math.max(best, run);
+      prev = d;
+    });
+    return best;
+  }
+
+  function computeMonthCount() {
+    const now = new Date();
+    const ym = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+    return Object.keys(trainingDays).filter(k => k.startsWith(ym) && trainingDays[k]).length;
   }
 
   function changeLevel(delta) {
@@ -846,9 +936,12 @@
 
   function renderProgrammePage() {
     const streak = computeStreak();
+    const bestStreak = computeBestStreak();
+    const monthCount = computeMonthCount();
     const todayKey = dateKey(new Date());
     const doneToday = !!trainingDays[todayKey];
     const lvl = LEVELS[currentLevel];
+    const progressPct = Math.round((currentLevel / (LEVELS.length - 1)) * 100);
     const week = [];
     for (let i = 6; i >= 0; i--) {
       const d = new Date(); d.setDate(d.getDate() - i);
@@ -856,39 +949,54 @@
     }
 
     return `
-      <div class="streak-row">
-        <div class="streak-badge">
-          <span class="streak-ic">${icon('flame')}</span>
-          <div>
-            <div class="streak-n">${streak}</div>
-            <div class="streak-l">jour${streak > 1 ? 's' : ''} de suite</div>
+      <div class="streak-hero">
+        <div class="streak-hero-top">
+          <div class="streak-hero-main">
+            <span class="streak-hero-ic">${icon('flame')}</span>
+            <div>
+              <div class="streak-hero-n">${streak}</div>
+              <div class="streak-hero-l">jour${streak > 1 ? 's' : ''} de suite</div>
+            </div>
           </div>
+          <button class="day-check-btn ${doneToday ? 'done' : ''}" id="toggle-training-today">
+            ${doneToday ? icon('check') + ' Fait' : 'Séance du jour'}
+          </button>
         </div>
-        <button class="day-check-btn ${doneToday ? 'done' : ''}" id="toggle-training-today">
-          ${doneToday ? icon('check') + ' Fait aujourd\'hui' : 'Séance faite aujourd\'hui'}
-        </button>
-      </div>
-
-      <div class="spark-card" style="margin-top:12px">
-        <div class="week">
+        <div class="week-row">
           ${week.map(w => `
-            <div class="day">
-              <div class="dot" style="${w.done ? 'background: var(--calm-soft); border-color: var(--calm); color:var(--calm);' : ''}">
-                ${w.done ? icon('check') : ''}
-              </div>
-              <div class="dlabel" style="${w.isToday ? 'color: var(--ink); font-weight:800;' : ''}">${fmtDay(w.d)}</div>
+            <div class="week-cell">
+              <div class="week-circle ${w.done ? 'done' : ''} ${w.isToday && !w.done ? 'today' : ''}">${w.done ? icon('check') : ''}</div>
+              <div class="week-label ${w.isToday ? 'today' : ''}">${fmtDay(w.d)}</div>
             </div>
           `).join('')}
         </div>
       </div>
 
-      <div class="section-label">Niveau ${currentLevel + 1} / ${LEVELS.length}</div>
-      <div class="level-card">
+      <div class="stats" style="margin-top:12px">
+        <div class="stat-card" style="--rc:var(--charge); --bs:var(--charge-soft)">
+          <div class="n">${bestStreak}</div>
+          <div class="l">Record</div>
+        </div>
+        <div class="stat-card" style="--rc:var(--joy); --bs:var(--joy-soft)">
+          <div class="n">${monthCount}</div>
+          <div class="l">Ce mois-ci</div>
+        </div>
+        <div class="stat-card" style="--rc:var(--calm); --bs:var(--calm-soft)">
+          <div class="n">${currentLevel + 1}/${LEVELS.length}</div>
+          <div class="l">Niveau</div>
+        </div>
+      </div>
+
+      <div class="section-label">Progression</div>
+      <div class="level-progress-track"><div class="level-progress-fill" style="width:${progressPct}%"></div></div>
+
+      <div class="level-card" style="margin-top:14px">
         <div class="level-nav">
           <button class="level-nav-btn" id="level-prev" ${currentLevel === 0 ? 'disabled' : ''}>${icon('chevronLeft')}</button>
           <div class="level-title">${lvl.title}</div>
           <button class="level-nav-btn" id="level-next" ${currentLevel === LEVELS.length - 1 ? 'disabled' : ''}>${icon('chevronRight')}</button>
         </div>
+        ${lvl.intro ? `<div class="level-intro">${lvl.intro}</div>` : ''}
         <ol class="level-steps">
           ${lvl.steps.map((s, i) => {
             const key = `${currentLevel}-${i}`;
@@ -896,7 +1004,7 @@
             return `
               <li>
                 <div class="step-row">
-                  <span class="step-text">${s.text}</span>
+                  <span class="step-text">${s.text}${s.rhythm ? `<span class="step-rhythm">(${s.rhythm})</span>` : ''}</span>
                   <button class="step-info-btn ${open ? 'open' : ''}" data-step-toggle="${key}">ⓘ</button>
                 </div>
                 ${open ? `<div class="step-detail">${s.detail}</div>` : ''}
@@ -905,17 +1013,15 @@
           }).join('')}
         </ol>
         <div class="level-criterion"><strong>Critère pour passer au niveau suivant :</strong> ${lvl.criterion}</div>
-        ${currentLevel < LEVELS.length - 1 ? `<button class="level-validate-btn" id="validate-level">Niveau acquis → niveau suivant</button>` : ''}
+        ${currentLevel < LEVELS.length - 1 ? `<button class="level-validate-btn" id="validate-level">${icon('check')} Niveau acquis — passer au suivant</button>` : ''}
       </div>
 
       <div class="section-label">Vue d'ensemble</div>
       <div class="history">
         ${LEVELS.map((l, i) => `
-          <div class="h-item level-overview-item ${i === currentLevel ? 'current' : ''}" data-goto-level="${i}">
-            <div class="h-left">
-              <span class="h-icon" style="${i < currentLevel ? '--rc:var(--calm); --bs:var(--calm-soft)' : i === currentLevel ? '--rc:var(--joy); --bs:var(--joy-soft)' : '--rc:var(--neutral); --bs:var(--neutral-soft)'}">${i < currentLevel ? icon('check') : icon('flag')}</span>
-              <span class="h-label">${i + 1}. ${l.title}</span>
-            </div>
+          <div class="level-overview-item ${i === currentLevel ? 'current' : ''} ${i < currentLevel ? 'past' : ''}" data-goto-level="${i}" style="${i < currentLevel ? '--rc:var(--calm)' : i === currentLevel ? '--rc:var(--joy)' : '--rc:var(--line)'}">
+            <span class="level-overview-ic" style="${i < currentLevel ? '--bs:var(--calm-soft); --rc:var(--calm)' : i === currentLevel ? '--bs:var(--joy-soft); --rc:var(--joy)' : '--bs:var(--neutral-soft); --rc:var(--neutral)'}">${i < currentLevel ? icon('check') : icon('flag')}</span>
+            <span class="level-overview-label">${i + 1}. ${l.title}</span>
           </div>
         `).join('')}
       </div>
